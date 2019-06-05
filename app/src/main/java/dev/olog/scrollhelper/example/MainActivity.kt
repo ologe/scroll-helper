@@ -5,9 +5,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import dev.olog.scrollhelper.InitialHeight
+import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.OnScrollSlidingBehavior
-import dev.olog.scrollhelper.ViewHeights
 import dev.olog.scrollhelper.example.listener.MyOnScrollSlidingBehavior
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -79,15 +80,40 @@ class MainActivity : AppCompatActivity() {
         val slidingPanelBehavior = if (slidingPanel != null) BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
         else null
         val bottomNavigation = findViewById<View>(R.id.bottomNavigation)
-        onScrollBehavior = MyOnScrollSlidingBehavior(
-                slidingPanelBehavior, bottomNavigation,
-                ViewHeights(
-                        if (slidingPanel != null) dimen(R.dimen.sliding_panel) else 0,
-                        if (bottomNavigation != null) dimen(R.dimen.bottomNavigation) else 0,
-                        dimen(R.dimen.toolbar),
-                        dimen(R.dimen.tabLayout)
+
+        val input : Input = when (type){
+            Type.FULL -> {
+                Input.Full(
+                    slidingPanelBehavior!! to InitialHeight(dimen(R.dimen.sliding_panel)),
+                    bottomNavigation to InitialHeight(dimen(R.dimen.bottomNavigation)),
+                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
+                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout))
                 )
-        )
+            }
+            Type.ONLY_SLIDING_PANEL -> {
+                Input.OnlySlidingPanel(
+                    slidingPanelBehavior!! to InitialHeight(dimen(R.dimen.sliding_panel)),
+                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
+                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout)),
+                    scrollableSlidingPanel = true
+                )
+            }
+            Type.ONLY_BOTTOM_NAVIGATION -> {
+                Input.OnlyBottomNavigation(
+                    bottomNavigation to InitialHeight(dimen(R.dimen.bottomNavigation)),
+                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
+                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout))
+                )
+            }
+            Type.NONE -> {
+                Input.None(
+                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
+                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout))
+                )
+            }
+        }
+
+        onScrollBehavior = MyOnScrollSlidingBehavior(input)
     }
 
     private fun setupBottomNavigation() {

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/full"
-          android:title="Full"/>
+          android:title="Both"/>
 
     <item android:id="@+id/only_sliding_panel"
           android:title="Only sliding panel"/>
@@ -11,6 +11,6 @@
           android:title="Only bottom navigation"/>
 
     <item android:id="@+id/none"
-          android:title="Full"/>
+          android:title="None"/>
 
 </menu>

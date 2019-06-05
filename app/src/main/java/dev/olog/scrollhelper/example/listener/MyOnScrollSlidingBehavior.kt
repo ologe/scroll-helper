@@ -4,22 +4,19 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.OnScrollSlidingBehavior
-import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
-import dev.olog.scrollhelper.ViewHeights
 import dev.olog.scrollhelper.example.BuildConfig
 import dev.olog.scrollhelper.example.PagerFragment
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
 class MyOnScrollSlidingBehavior(
-        slidingPanel: MultiListenerBottomSheetBehavior<*>?,
-        bottomNavigation: View?,
-        initialHeights: ViewHeights
-) : OnScrollSlidingBehavior(slidingPanel, bottomNavigation, initialHeights) {
+        input: Input
+) : OnScrollSlidingBehavior(input) {
 
     /**
-     * Override this to resotre your custom views to their start position
+     * Override this to restore your custom views to their start position
      */
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
         super.restoreInitialPosition(recyclerView)
@@ -50,6 +47,9 @@ class MyOnScrollSlidingBehavior(
     private fun couldHaveToolbar(f: Fragment): Boolean {
         return hasFragmentOwnership(f.tag)
     }
+
+    // TODO check after migrating to viewpager 2
+    protected fun isViewPagerChildTag(tag: String?) = tag?.startsWith("android:switcher:") == true
 
     override fun searchForRecyclerView(fragment: Fragment): RecyclerView? {
         return fragment.view?.findViewByIdNotRecursive(R.id.list)
