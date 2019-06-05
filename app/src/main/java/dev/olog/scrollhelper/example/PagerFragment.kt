@@ -1,9 +1,11 @@
 package dev.olog.scrollhelper.example
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -23,6 +25,23 @@ class PagerFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.viewPager.adapter = ViewPagerAdapter(childFragmentManager)
         view.tabLayout.setupWithViewPager(view.viewPager)
+
+        view.menu.setOnClickListener {
+            val popup = PopupMenu(view.context, view.menu, Gravity.BOTTOM)
+            popup.inflate(R.menu.menu)
+            popup.setOnMenuItemClickListener {
+                type = when (it.itemId){
+                    R.id.full -> MainActivity.Type.FULL
+                    R.id.only_navigation -> MainActivity.Type.ONLY_BOTTOM_NAVIGATION
+                    R.id.only_sliding_panel -> MainActivity.Type.ONLY_SLIDING_PANEL
+                    R.id.none -> MainActivity.Type.NONE
+                    else -> throw IllegalStateException()
+                }
+                requireActivity().recreate()
+                true
+            }
+            popup.show()
+        }
     }
 
 }

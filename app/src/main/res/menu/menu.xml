@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/full"
+          android:title="Full"/>
+
+    <item android:id="@+id/only_sliding_panel"
+          android:title="Only sliding panel"/>
+
+    <item android:id="@+id/only_navigation"
+          android:title="Only bottom navigation"/>
+
+    <item android:id="@+id/none"
+          android:title="Full"/>
+
+</menu>

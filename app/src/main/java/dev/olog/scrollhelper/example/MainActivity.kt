@@ -11,6 +11,11 @@ import dev.olog.scrollhelper.ViewHeights
 import dev.olog.scrollhelper.example.listener.MyOnScrollSlidingBehavior
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * Change me to test other behavior
+ */
+var type = MainActivity.Type.FULL
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var onScrollBehavior: OnScrollSlidingBehavior
@@ -22,10 +27,6 @@ class MainActivity : AppCompatActivity() {
         NONE
     }
 
-    /**
-     * Change me to test other behavior
-     */
-    private val type = Type.FULL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +52,9 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragmentContainer, PagerFragment(), PagerFragment.TAG)
-                .commit()
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, PagerFragment(), PagerFragment.TAG)
+                    .commit()
         }
     }
 
@@ -73,22 +74,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupScrollBehavior() {
-        val slidingPanelBehavior = BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
         val slidingPanel = findViewById<View>(R.id.slidingPanel)
+
+        val slidingPanelBehavior = if (slidingPanel != null) BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
+        else null
         val bottomNavigation = findViewById<View>(R.id.bottomNavigation)
         onScrollBehavior = MyOnScrollSlidingBehavior(
-            slidingPanelBehavior, bottomNavigation,
-            ViewHeights(
-                if (slidingPanel != null) dimen(R.dimen.sliding_panel) else 0,
-                if (bottomNavigation != null) dimen(R.dimen.bottomNavigation) else 0,
-                dimen(R.dimen.toolbar),
-                dimen(R.dimen.tabLayout)
-            )
+                slidingPanelBehavior, bottomNavigation,
+                ViewHeights(
+                        if (slidingPanel != null) dimen(R.dimen.sliding_panel) else 0,
+                        if (bottomNavigation != null) dimen(R.dimen.bottomNavigation) else 0,
+                        dimen(R.dimen.toolbar),
+                        dimen(R.dimen.tabLayout)
+                )
         )
     }
 
     private fun setupBottomNavigation() {
-        if (slidingPanel.findViewById<View>(R.id.bottomNavigation) == null) {
+        if (findViewById<View>(R.id.bottomNavigation) == null) {
             return
         }
         bottomNavigation.setOnNavigationItemSelectedListener {
@@ -98,8 +101,8 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("invalid item id ${it.itemId}")
             }
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment.first, fragment.second)
-                .commit()
+                    .replace(R.id.fragmentContainer, fragment.first, fragment.second)
+                    .commit()
             true
         }
     }
