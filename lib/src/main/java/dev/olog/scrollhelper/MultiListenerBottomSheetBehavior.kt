@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class SuperCerealBottomSheetBehavior<T : View> : BottomSheetBehavior<T> {
+class MultiListenerBottomSheetBehavior<T : View> : BottomSheetBehavior<T> {
 
     constructor() : super()
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -25,8 +25,6 @@ class SuperCerealBottomSheetBehavior<T : View> : BottomSheetBehavior<T> {
             }
         }
     }
-
-
 
     fun addPanelSlideListener(callback: BottomSheetCallback) {
         if (callbacks.isEmpty()){

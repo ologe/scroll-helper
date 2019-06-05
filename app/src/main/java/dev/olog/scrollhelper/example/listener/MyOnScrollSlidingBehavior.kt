@@ -1,97 +1,97 @@
 package dev.olog.scrollhelper.example.listener
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.math.MathUtils.clamp
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.OnScrollSlidingBehavior
-import dev.olog.scrollhelper.SuperCerealBottomSheetBehavior
+import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ViewHeights
+import dev.olog.scrollhelper.example.BuildConfig
 import dev.olog.scrollhelper.example.PagerFragment
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
 class MyOnScrollSlidingBehavior(
-    activity: AppCompatActivity,
-    slidingPanel: SuperCerealBottomSheetBehavior<*>,
-    bottomNavigation: View,
-    initialHeights: ViewHeights
-//        private val blurView: View
-) : OnScrollSlidingBehavior(activity, slidingPanel, bottomNavigation, initialHeights) {
+        slidingPanel: MultiListenerBottomSheetBehavior<*>?,
+        bottomNavigation: View?,
+        initialHeights: ViewHeights
+) : OnScrollSlidingBehavior(slidingPanel, bottomNavigation, initialHeights) {
 
+    /**
+     * Override this to resotre your custom views to their start position
+     */
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
         super.restoreInitialPosition(recyclerView)
 //        blurView.animate()?.translationY(0f)
     }
 
+    /**
+     * Override this to translate your custom views
+     */
     override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onRecyclerViewScrolled(recyclerView, dx, dy)
-        val clampedNavigationTranslation =
-            clamp(bottomNavigation.translationY + dy, 0f, bottomNavigation.height.toFloat())
-//        blurView.translationY = clampedNavigationTranslation
-    }
-
-    private fun hasFragmentOwnership(tag: String?) = tag?.startsWith("dev.olog") == true
-    private fun isPlayerTag(tag: String?) = tag?.contains("Player") == true
-
-    override fun couldHaveToolbar(f: Fragment): Boolean {
-        return hasFragmentOwnership(f.tag) && !isPlayerTag(f.tag)
-    }
-
-    override fun skipFragment(f: Fragment): Boolean {
-        return isPlayerTag(f.tag)
     }
 
     /**
-     * All main recycler view in the app have [android:id] = [R.id.list] and are
-     *  placed as direct child of root.
-     * If fails to find R.id.list, try recursiveley to find [R.id.recycler_view]
-     *  in the hierarchy (settings fragment)
+     * Search only in my fragments, skip traversing the hierarchy view of non application fragments
      */
-    override fun searchForRecyclerView(f: Fragment): RecyclerView? {
-        var recyclerView = f.view?.findViewByIdNotRecursive<RecyclerView>(R.id.list)
-//        if (recyclerView == null && f.tag == Fragments.SETTINGS) {
-//            recyclerView = f.view?.findViewById(R.id.list)
-//        }
-        return recyclerView
+    private fun hasFragmentOwnership(tag: String?) = tag?.startsWith(BuildConfig.APPLICATION_ID) == true
+
+    private fun isViewPagerFragment(tag: String?) = tag?.startsWith("android:switcher") == true
+
+    override fun skipFragment(fragment: Fragment): Boolean {
+        return !hasFragmentOwnership(fragment.tag) && !isViewPagerFragment(fragment.tag)
     }
 
-    override fun searchForViewPager(f: Fragment): ViewPager? {
-        if (f.tag == PagerFragment.TAG) {
-            return f.view?.findViewByIdNotRecursive(R.id.viewPager)
+    /**
+     * Assumes all my fragments has toolbar
+     */
+    private fun couldHaveToolbar(f: Fragment): Boolean {
+        return hasFragmentOwnership(f.tag)
+    }
+
+    override fun searchForRecyclerView(fragment: Fragment): RecyclerView? {
+        return fragment.view?.findViewByIdNotRecursive(R.id.list)
+    }
+
+    /**
+     * Only [PagerFragment] can have viewpager
+     */
+    override fun searchForViewPager(fragment: Fragment): ViewPager? {
+        if (fragment.tag == PagerFragment.TAG) {
+            return fragment.view?.findViewByIdNotRecursive(R.id.viewPager)
         }
         return null
     }
 
-    override fun searchForToolbar(f: Fragment): View? {
+    override fun searchForToolbar(fragment: Fragment): View? {
         val view: View? = when {
-            isViewPagerChildTag(f.tag) -> {
+            isViewPagerChildTag(fragment.tag) -> {
                 // search toolbar and tab layout in parent fragment
-                f.parentFragment?.view
+                fragment.parentFragment?.view
             }
-            couldHaveToolbar(f) -> f.view
+            couldHaveToolbar(fragment) -> fragment.view
             else -> null
         }
         return view?.findViewByIdNotRecursive(R.id.toolbar)
     }
 
-    override fun searchForTabLayout(f: Fragment): View? {
+    override fun searchForTabLayout(fragment: Fragment): View? {
         val view: View? = when {
-            isViewPagerChildTag(f.tag) -> {
+            isViewPagerChildTag(fragment.tag) -> {
                 // search toolbar and tab layout in parent fragment
-                f.parentFragment?.view
+                fragment.parentFragment?.view
             }
-            couldHaveToolbar(f) -> f.view
+            couldHaveToolbar(fragment) -> fragment.view
             else -> null
         }
 
         return view?.findViewByIdNotRecursive(R.id.tabLayout)
     }
 
-    override fun searchForFab(f: Fragment): View? {
-        return f.view?.findViewById<View>(R.id.fab)
+    override fun searchForFab(fragment: Fragment): View? {
+        return fragment.view?.findViewById(R.id.fab)
     }
 
 }

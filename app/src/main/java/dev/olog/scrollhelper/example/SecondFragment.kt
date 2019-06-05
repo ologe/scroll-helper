@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_child.view.*
 class SecondFragment : Fragment(){
 
     companion object {
-        val TAG = SecondFragment::class.java.name
+        val TAG = SecondFragment::class.java.canonicalName
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_view_pager.view.*
 class PagerFragment : Fragment(){
 
     companion object {
-        val TAG = PagerFragment::class.java.name
+        val TAG = PagerFragment::class.java.canonicalName
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
