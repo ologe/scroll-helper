@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/item1"
-        android:title="item1"
+        android:title="viewpager"
         android:icon="@drawable/ic_add_a_photo_black_24dp"/>
 
     <item android:id="@+id/item2"
-        android:title="item2"
+        android:title="list"
         android:icon="@drawable/ic_airline_seat_recline_extra_black_24dp"/>
 
 </menu>

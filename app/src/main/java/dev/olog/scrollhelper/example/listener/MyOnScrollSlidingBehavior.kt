@@ -33,7 +33,7 @@ class MyOnScrollSlidingBehavior(
 //        blurView.translationY = clampedNavigationTranslation
     }
 
-    private fun hasFragmentOwnership(tag: String?) = tag?.startsWith("dev.olog.msc") == true
+    private fun hasFragmentOwnership(tag: String?) = tag?.startsWith("dev.olog") == true
     private fun isPlayerTag(tag: String?) = tag?.contains("Player") == true
 
     override fun couldHaveToolbar(f: Fragment): Boolean {

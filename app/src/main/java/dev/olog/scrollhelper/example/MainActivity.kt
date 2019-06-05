@@ -39,10 +39,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener {
             val fragment: Pair<Fragment, String> = when (it.itemId) {
                 R.id.item1 -> PagerFragment() to PagerFragment.TAG
-                R.id.item2 -> ChildFragment() to "item2tag"
+                R.id.item2 -> SecondFragment() to SecondFragment.TAG
                 else -> throw IllegalArgumentException("invalid item id ${it.itemId}")
             }
-            // TODO
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment.first, fragment.second)
+                    .commit()
             true
         }
     }
