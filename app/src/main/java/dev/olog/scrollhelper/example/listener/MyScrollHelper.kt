@@ -31,26 +31,9 @@ class MyScrollHelper(
         super.onRecyclerViewScrolled(recyclerView, dx, dy)
     }
 
-    /**
-     * Search only in my fragments, skip traversing the hierarchy view of non application fragments
-     */
-    private fun hasFragmentOwnership(tag: String?) = tag?.startsWith(BuildConfig.APPLICATION_ID) == true
-
-    private fun isViewPagerFragment(tag: String?) = tag?.startsWith("android:switcher") == true
-
     override fun skipFragment(fragment: Fragment): Boolean {
         return !hasFragmentOwnership(fragment.tag) && !isViewPagerFragment(fragment.tag)
     }
-
-    /*
-     * Assumes all my fragments has toolbar
-     */
-    private fun couldHaveToolbar(f: Fragment): Boolean {
-        return hasFragmentOwnership(f.tag)
-    }
-
-    // TODO check after migrating to viewpager 2
-    protected fun isViewPagerChildTag(tag: String?) = tag?.startsWith("android:switcher:") == true
 
     override fun searchForRecyclerView(fragment: Fragment): RecyclerView? {
         return fragment.view?.findViewByIdNotRecursive(R.id.list)
@@ -94,5 +77,19 @@ class MyScrollHelper(
     override fun searchForFab(fragment: Fragment): View? {
         return fragment.view?.findViewById(R.id.fab)
     }
+
+    /**
+     * Search only in my fragments, skip traversing the hierarchy view of non application fragments
+     */
+    private fun hasFragmentOwnership(tag: String?) = tag?.startsWith(BuildConfig.APPLICATION_ID) == true
+
+    private fun isViewPagerFragment(tag: String?) = tag?.startsWith("android:switcher") == true
+
+    private fun couldHaveToolbar(f: Fragment): Boolean {
+        return hasFragmentOwnership(f.tag)
+    }
+
+    // TODO check after migrating to viewpager 2
+    private fun isViewPagerChildTag(tag: String?) = tag?.startsWith("android:switcher:") == true
 
 }
