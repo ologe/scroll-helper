@@ -9,7 +9,7 @@ import dev.olog.scrollhelper.InitialHeight
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ScrollHelper
-import dev.olog.scrollhelper.example.listener.MyOnScrollSlidingBehavior
+import dev.olog.scrollhelper.example.listener.MyScrollHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        onScrollBehavior = MyOnScrollSlidingBehavior(this, input)
+        onScrollBehavior = MyScrollHelper(this, input)
     }
 
     private fun setupBottomNavigation() {

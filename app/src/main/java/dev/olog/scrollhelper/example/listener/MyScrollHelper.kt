@@ -12,7 +12,7 @@ import dev.olog.scrollhelper.example.PagerFragment
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
-class MyOnScrollSlidingBehavior(
+class MyScrollHelper(
     activity: FragmentActivity,
     input: Input
 ) : ScrollHelper(activity, input) {
@@ -22,7 +22,6 @@ class MyOnScrollSlidingBehavior(
      */
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
         super.restoreInitialPosition(recyclerView)
-//        blurView.animate()?.translationY(0f)
     }
 
     /**
