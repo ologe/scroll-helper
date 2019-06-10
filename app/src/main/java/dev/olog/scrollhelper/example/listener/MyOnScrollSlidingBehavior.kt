@@ -2,18 +2,20 @@ package dev.olog.scrollhelper.example.listener
 
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.Input
-import dev.olog.scrollhelper.OnScrollSlidingBehavior
+import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.BuildConfig
 import dev.olog.scrollhelper.example.PagerFragment
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
 class MyOnScrollSlidingBehavior(
-        input: Input
-) : OnScrollSlidingBehavior(input) {
+    activity: FragmentActivity,
+    input: Input
+) : ScrollHelper(activity, input) {
 
     /**
      * Override this to restore your custom views to their start position
@@ -41,7 +43,7 @@ class MyOnScrollSlidingBehavior(
         return !hasFragmentOwnership(fragment.tag) && !isViewPagerFragment(fragment.tag)
     }
 
-    /**
+    /*
      * Assumes all my fragments has toolbar
      */
     private fun couldHaveToolbar(f: Fragment): Boolean {

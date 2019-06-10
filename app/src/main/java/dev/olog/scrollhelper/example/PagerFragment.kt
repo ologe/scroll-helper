@@ -27,6 +27,7 @@ class PagerFragment : Fragment(){
         view.tabLayout.setupWithViewPager(view.viewPager)
 
         view.menu.setOnClickListener {
+            // utility for changing input type at runtime
             val popup = PopupMenu(view.context, view.menu, Gravity.BOTTOM)
             popup.inflate(R.menu.menu)
             popup.setOnMenuItemClickListener {

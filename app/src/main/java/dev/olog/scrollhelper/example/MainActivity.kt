@@ -8,7 +8,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.scrollhelper.InitialHeight
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
-import dev.olog.scrollhelper.OnScrollSlidingBehavior
+import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.listener.MyOnScrollSlidingBehavior
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,7 +19,7 @@ var type = MainActivity.Type.FULL
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var onScrollBehavior: OnScrollSlidingBehavior
+    private lateinit var onScrollBehavior: ScrollHelper
 
     enum class Type {
         FULL,
@@ -61,12 +61,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        onScrollBehavior.onAttach(this)
+        onScrollBehavior.onAttach()
     }
 
     override fun onPause() {
         super.onPause()
-        onScrollBehavior.onDetach(this)
+        onScrollBehavior.onDetach()
     }
 
     override fun onDestroy() {
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        onScrollBehavior = MyOnScrollSlidingBehavior(input)
+        onScrollBehavior = MyOnScrollSlidingBehavior(this, input)
     }
 
     private fun setupBottomNavigation() {

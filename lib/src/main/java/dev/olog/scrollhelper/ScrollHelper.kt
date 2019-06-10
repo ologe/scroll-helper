@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.impl.*
 
-abstract class OnScrollSlidingBehavior(
+abstract class ScrollHelper(
     private val activity: FragmentActivity,
     input: Input
 ) {
