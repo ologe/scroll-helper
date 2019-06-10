@@ -5,10 +5,10 @@ import android.util.AttributeSet
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class MultiListenerBottomSheetBehavior<T : View> : BottomSheetBehavior<T> {
-
-    constructor() : super()
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+class MultiListenerBottomSheetBehavior<T : View> constructor(
+    context: Context,
+    attrs: AttributeSet
+) : BottomSheetBehavior<T>(context, attrs) {
 
     private val callbacks = mutableSetOf<BottomSheetCallback>()
 

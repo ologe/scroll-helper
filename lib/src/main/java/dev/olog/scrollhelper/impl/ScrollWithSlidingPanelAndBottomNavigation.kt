@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.SlidingPanelListener
 
-internal class ScrollWithSlidingPanelAndBottomNavigation(input: Input.Full) : BaseScroll(input) {
+internal class ScrollWithSlidingPanelAndBottomNavigation(input: Input.Full) : AbsScroll(input) {
 
     private val slidingPanelHeight: Int = input.slidingPanel.second.value
     private val slidingPanelPlusNavigationHeight: Int = slidingPanelHeight + input.bottomNavigation.second.value

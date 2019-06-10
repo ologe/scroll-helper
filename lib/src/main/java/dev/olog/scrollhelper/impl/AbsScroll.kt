@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.ViewPagerListener
 
-internal abstract class BaseScroll(private val input: Input) {
+internal abstract class AbsScroll(private val input: Input) {
 
     val toolbarMap = SparseArray<View>()
     val tabLayoutMap = SparseArray<View>()

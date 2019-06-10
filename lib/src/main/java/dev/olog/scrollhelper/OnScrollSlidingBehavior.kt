@@ -14,7 +14,7 @@ abstract class OnScrollSlidingBehavior(
 ) {
 
 
-    private val impl: BaseScroll = when (input) {
+    private val impl: AbsScroll = when (input) {
         is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(input)
         is Input.OnlyBottomNavigation -> ScrollWithBottomNavigation(input)
         is Input.OnlySlidingPanel -> ScrollWithSlidingPanel(input)
@@ -38,6 +38,9 @@ abstract class OnScrollSlidingBehavior(
         activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks)
     }
 
+    /**
+     * Clear resources
+     */
     open fun dispose() {
         impl.dispose()
     }
@@ -65,15 +68,15 @@ abstract class OnScrollSlidingBehavior(
             searchForRecyclerView(fragment)?.let { recyclerView ->
                 // recycler view found, add scroll listener
                 recyclerView.addOnScrollListener(onScrollListener)
-                // map the list to a toolbar
+                // map recycler view to toolbar
                 searchForToolbar(fragment)?.let {
                     impl.toolbarMap.append(recyclerView.hashCode(), it)
                 }
-                // map the list to a tabLayout
+                // map recycler view to tabLayout
                 searchForTabLayout(fragment)?.let {
                     impl.tabLayoutMap.append(recyclerView.hashCode(), it)
                 }
-
+                // map recycler view to fab
                 searchForFab(fragment)?.let { fab ->
                     impl.fabMap.append(recyclerView.hashCode(), fab)
                     applyMarginToFab(fab)
@@ -102,9 +105,8 @@ abstract class OnScrollSlidingBehavior(
                 // recycler view found, detach listener and clean
                 recyclerView.removeOnScrollListener(onScrollListener)
                 impl.fabMap.remove(recyclerView.hashCode())
-
-                searchForToolbar(fragment)?.let { impl.toolbarMap.remove(recyclerView.hashCode()) }
-                searchForTabLayout(fragment)?.let { impl.tabLayoutMap.remove(recyclerView.hashCode()) }
+                impl.toolbarMap.remove(recyclerView.hashCode())
+                impl.tabLayoutMap.remove(recyclerView.hashCode())
             }
         }
 

@@ -9,7 +9,7 @@ import dev.olog.scrollhelper.Input
 
 internal class ScrollWithSlidingPanel(
     input: Input.OnlySlidingPanel
-) : BaseScroll(input) {
+) : AbsScroll(input) {
 
     private val scrollSlidingPanel = input.scrollableSlidingPanel
 

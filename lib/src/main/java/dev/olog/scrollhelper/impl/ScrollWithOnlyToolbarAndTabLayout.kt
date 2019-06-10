@@ -7,7 +7,7 @@ import dev.olog.scrollhelper.Input
 /**
  * Behavior when sliding panel and bottom navigation are missing
  */
-internal class ScrollWithOnlyToolbarAndTabLayout(input: Input.None): BaseScroll(input){
+internal class ScrollWithOnlyToolbarAndTabLayout(input: Input.None): AbsScroll(input){
 
     override fun onAttach(activity: FragmentActivity) {
 

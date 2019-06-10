@@ -14,6 +14,9 @@ sealed class Input(
         tabLayoutHeight?.let { require(tabLayoutHeight.value > 0) }
     }
 
+    /**
+     * Handles both sliding panel and bottom sheet
+     */
     class Full(
         val slidingPanel: Pair<MultiListenerBottomSheetBehavior<*>, InitialHeight>,
         val bottomNavigation: Pair<View, InitialHeight>,
@@ -28,6 +31,9 @@ sealed class Input(
 
     }
 
+    /**
+     * Handles only sliding panel
+     */
     class OnlySlidingPanel(
         val slidingPanel: Pair<MultiListenerBottomSheetBehavior<*>, InitialHeight>,
         toolbarHeight: InitialHeight,
@@ -39,6 +45,9 @@ sealed class Input(
         }
     }
 
+    /**
+     * Handles only bottom navigation
+     */
     class OnlyBottomNavigation(
         val bottomNavigation: Pair<View, InitialHeight>,
         toolbarHeight: InitialHeight,
@@ -49,6 +58,9 @@ sealed class Input(
         }
     }
 
+    /**
+     * No sliding panel, neither bottom navigation
+     */
     class None(
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null

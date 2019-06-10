@@ -9,7 +9,7 @@ import dev.olog.scrollhelper.Input
 
 internal class ScrollWithBottomNavigation(
     input: Input.OnlyBottomNavigation
-): BaseScroll(input){
+): AbsScroll(input){
 
     private val bottomNavigation = input.bottomNavigation.first
     private val bottomNavigationHeight = input.bottomNavigation.second.value
