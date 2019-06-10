@@ -52,7 +52,7 @@ abstract class OnScrollSlidingBehavior(
     private val fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
 
         override fun onFragmentResumed(fm: FragmentManager, fragment: Fragment) {
-            if (skipFragment(fragment)) {
+            if (fragment.view == null || skipFragment(fragment)) {
                 return
             }
 
