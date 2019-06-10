@@ -9,11 +9,12 @@ import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.impl.*
 
 abstract class OnScrollSlidingBehavior(
+    private val activity: FragmentActivity,
     input: Input
 ) {
 
 
-    private val impl : BaseScroll = when (input){
+    private val impl: BaseScroll = when (input) {
         is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(input)
         is Input.OnlyBottomNavigation -> ScrollWithBottomNavigation(input)
         is Input.OnlySlidingPanel -> ScrollWithSlidingPanel(input)
@@ -24,7 +25,7 @@ abstract class OnScrollSlidingBehavior(
     /**
      * Attach listeners
      */
-    open fun onAttach(activity: FragmentActivity) {
+    open fun onAttach() {
         impl.onAttach(activity)
         activity.supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, true)
     }
@@ -32,7 +33,7 @@ abstract class OnScrollSlidingBehavior(
     /**
      * Detach listeners
      */
-    open fun onDetach(activity: FragmentActivity) {
+    open fun onDetach() {
         impl.onDetach(activity)
         activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks)
     }
