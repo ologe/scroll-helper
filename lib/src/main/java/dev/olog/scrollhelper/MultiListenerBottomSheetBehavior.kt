@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class MultiListenerBottomSheetBehavior<T : View> constructor(
+open class MultiListenerBottomSheetBehavior<T : View> constructor(
     context: Context,
     attrs: AttributeSet
 ) : BottomSheetBehavior<T>(context, attrs) {
