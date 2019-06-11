@@ -8,7 +8,7 @@ import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.BuildConfig
-import dev.olog.scrollhelper.example.PagerFragment
+import dev.olog.scrollhelper.example.FragmentWithViewPager
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
@@ -40,10 +40,10 @@ class MyScrollHelper(
     }
 
     /**
-     * Only [PagerFragment] can have viewpager
+     * Only [FragmentWithViewPager] can have viewpager
      */
     override fun searchForViewPager(fragment: Fragment): ViewPager? {
-        if (fragment.tag == PagerFragment.TAG) {
+        if (fragment.tag == FragmentWithViewPager.TAG) {
             return fragment.view?.findViewByIdNotRecursive(R.id.viewPager)
         }
         return null

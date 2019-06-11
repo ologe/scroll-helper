@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.fragmentContainer, PagerFragment(), PagerFragment.TAG)
+                    .add(R.id.fragmentContainer, FragmentWithViewPager(), FragmentWithViewPager.TAG)
                     .commit()
         }
     }
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         }
         bottomNavigation.setOnNavigationItemSelectedListener {
             val fragment: Pair<Fragment, String> = when (it.itemId) {
-                R.id.item1 -> PagerFragment() to PagerFragment.TAG
+                R.id.item1 -> FragmentWithViewPager() to FragmentWithViewPager.TAG
                 R.id.item2 -> SecondFragment() to SecondFragment.TAG
                 else -> throw IllegalArgumentException("invalid item id ${it.itemId}")
             }

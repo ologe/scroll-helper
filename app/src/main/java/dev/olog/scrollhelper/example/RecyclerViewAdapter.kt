@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class Holder(view: View): RecyclerView.ViewHolder(view)
@@ -17,6 +18,14 @@ class Adapter(private val childCount: Int) : RecyclerView.Adapter<Holder>() {
     override fun getItemCount(): Int = childCount
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.itemView.text.text = position.toString()
+        val imageView = holder.itemView.image
+
+        val image = IMAGES[position % IMAGES.size]
+
+        Glide.with(imageView.context)
+                .load(image)
+                .centerCrop()
+                .override(200, 200)
+                .into(imageView)
     }
 }

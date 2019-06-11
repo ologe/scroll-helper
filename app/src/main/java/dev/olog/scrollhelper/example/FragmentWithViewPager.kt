@@ -12,10 +12,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_view_pager.view.*
 
-class PagerFragment : Fragment(){
+class FragmentWithViewPager : Fragment(){
 
     companion object {
-        val TAG = PagerFragment::class.java.canonicalName
+        val TAG = FragmentWithViewPager::class.java.canonicalName
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,7 +52,7 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm){
     private val childCount = listOf(50, 50, 2, 50)
 
     override fun getItem(position: Int): Fragment {
-        val fragment = ChildFragment()
+        val fragment = ViewpagerChildFragment()
         val bundle = bundleOf("child_count" to childCount[position])
         fragment.arguments = bundle
         return fragment
