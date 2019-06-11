@@ -8,7 +8,11 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 28_0_0_1
+        // sdk-major-minor-alpha/beta/release-fix
+        // alpha 0
+        // beta 1
+        // release 2
+        versionCode 28_0_1_0_2
         versionName "0.1-alpha02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
