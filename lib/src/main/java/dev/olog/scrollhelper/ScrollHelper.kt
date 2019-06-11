@@ -79,10 +79,11 @@ abstract class ScrollHelper(
                 // map recycler view to fab
                 searchForFab(fragment)?.let { fab ->
                     impl.fabMap.append(recyclerView.hashCode(), fab)
-                    applyMarginToFab(fab)
+                    applyMarginToFab(fragment, fab)
                 }
 
                 applyInsetsToList(
+                    fragment,
                     recyclerView,
                     impl.toolbarMap.get(recyclerView.hashCode()),
                     impl.tabLayoutMap.get(recyclerView.hashCode())
@@ -186,7 +187,7 @@ abstract class ScrollHelper(
      * @param toolbar associated toolbar
      * @param tabLayout associated tabLayout
      */
-    protected open fun applyInsetsToList(list: RecyclerView, toolbar: View?, tabLayout: View?) {
+    protected open fun applyInsetsToList(fragment: Fragment, list: RecyclerView, toolbar: View?, tabLayout: View?) {
         impl.applyInsetsToList(list, toolbar, tabLayout)
     }
 
@@ -194,7 +195,7 @@ abstract class ScrollHelper(
      * Automatically adds margin to fab, override to change the behavior
      * @param fab view to apply margin
      */
-    protected open fun applyMarginToFab(fab: View) {
+    protected open fun applyMarginToFab(fragment: Fragment, fab: View) {
         impl.applyMarginToFab(fab)
     }
 
