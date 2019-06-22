@@ -2,18 +2,18 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
 
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         // sdk-major-minor-alpha/beta/release-fix
         // alpha 0
         // beta 1
         // release 2
-        versionCode 28_0_1_0_3
-        versionName "0.1-alpha03"
+        versionCode 28_0_1_0_4
+        versionName "0.1-alpha04"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

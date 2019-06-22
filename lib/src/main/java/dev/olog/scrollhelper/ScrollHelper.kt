@@ -10,15 +10,16 @@ import dev.olog.scrollhelper.impl.*
 
 abstract class ScrollHelper(
     private val activity: FragmentActivity,
-    input: Input
+    input: Input,
+    enableClipRecursively: Boolean
 ) {
 
 
     private val impl: AbsScroll = when (input) {
-        is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(input)
-        is Input.OnlyBottomNavigation -> ScrollWithBottomNavigation(input)
-        is Input.OnlySlidingPanel -> ScrollWithSlidingPanel(input)
-        is Input.None -> ScrollWithOnlyToolbarAndTabLayout(input)
+        is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(input, enableClipRecursively)
+        is Input.OnlyBottomNavigation -> ScrollWithBottomNavigation(input, enableClipRecursively)
+        is Input.OnlySlidingPanel -> ScrollWithSlidingPanel(input, enableClipRecursively)
+        is Input.None -> ScrollWithOnlyToolbarAndTabLayout(input, enableClipRecursively)
 
     }
 

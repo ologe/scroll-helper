@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.olog.scrollhelper.Input
 
 internal class ScrollWithBottomNavigation(
-    input: Input.OnlyBottomNavigation
-): AbsScroll(input){
+    input: Input.OnlyBottomNavigation,
+    enableClipRecursively: Boolean
+) : AbsScroll(input, enableClipRecursively) {
 
     private val bottomNavigation = input.bottomNavigation.first
-    private val bottomNavigationHeight = input.bottomNavigation.second.value
+    private val bottomNavigationHeight = input.bottomNavigation.second
 
     override fun onAttach(activity: FragmentActivity) {
 

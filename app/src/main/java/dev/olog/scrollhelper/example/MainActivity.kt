@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import dev.olog.scrollhelper.InitialHeight
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ScrollHelper
@@ -53,9 +52,9 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.fragmentContainer, FragmentWithViewPager(), FragmentWithViewPager.TAG)
-                    .commit()
+                .beginTransaction()
+                .add(R.id.fragmentContainer, FragmentWithViewPager(), FragmentWithViewPager.TAG)
+                .commit()
         }
     }
 
@@ -77,43 +76,44 @@ class MainActivity : AppCompatActivity() {
     private fun setupScrollBehavior() {
         val slidingPanel = findViewById<View>(R.id.slidingPanel)
 
-        val slidingPanelBehavior = if (slidingPanel != null) BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
-        else null
+        val slidingPanelBehavior =
+            if (slidingPanel != null) BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
+            else null
         val bottomNavigation = findViewById<View>(R.id.bottomNavigation)
 
-        val input : Input = when (type){
+        val input: Input = when (type) {
             Type.FULL -> {
                 Input.Full(
-                    slidingPanelBehavior!! to InitialHeight(dimen(R.dimen.sliding_panel)),
-                    bottomNavigation to InitialHeight(dimen(R.dimen.bottomNavigation)),
-                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
-                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout))
+                    slidingPanelBehavior!! to dimen(R.dimen.sliding_panel),
+                    bottomNavigation to dimen(R.dimen.bottomNavigation),
+                    toolbarHeight = dimen(R.dimen.toolbar),
+                    tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )
             }
             Type.ONLY_SLIDING_PANEL -> {
                 Input.OnlySlidingPanel(
-                    slidingPanelBehavior!! to InitialHeight(dimen(R.dimen.sliding_panel)),
-                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
-                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout)),
+                    slidingPanelBehavior!! to dimen(R.dimen.sliding_panel),
+                    toolbarHeight = dimen(R.dimen.toolbar),
+                    tabLayoutHeight = dimen(R.dimen.tabLayout),
                     scrollableSlidingPanel = true
                 )
             }
             Type.ONLY_BOTTOM_NAVIGATION -> {
                 Input.OnlyBottomNavigation(
-                    bottomNavigation to InitialHeight(dimen(R.dimen.bottomNavigation)),
-                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
-                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout))
+                    bottomNavigation to dimen(R.dimen.bottomNavigation),
+                    toolbarHeight = dimen(R.dimen.toolbar),
+                    tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )
             }
             Type.NONE -> {
                 Input.None(
-                    toolbarHeight = InitialHeight(dimen(R.dimen.toolbar)),
-                    tabLayoutHeight = InitialHeight(dimen(R.dimen.tabLayout))
+                    toolbarHeight = dimen(R.dimen.toolbar),
+                    tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )
             }
         }
 
-        onScrollBehavior = MyScrollHelper(this, input)
+        onScrollBehavior = MyScrollHelper(this, input, true)
     }
 
     private fun setupBottomNavigation() {
@@ -127,8 +127,8 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("invalid item id ${it.itemId}")
             }
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, fragment.first, fragment.second)
-                    .commit()
+                .replace(R.id.fragmentContainer, fragment.first, fragment.second)
+                .commit()
             true
         }
     }

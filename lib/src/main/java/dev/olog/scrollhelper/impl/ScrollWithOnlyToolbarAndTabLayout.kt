@@ -7,7 +7,10 @@ import dev.olog.scrollhelper.Input
 /**
  * Behavior when sliding panel and bottom navigation are missing
  */
-internal class ScrollWithOnlyToolbarAndTabLayout(input: Input.None): AbsScroll(input){
+internal class ScrollWithOnlyToolbarAndTabLayout(
+    input: Input.None,
+    enableClipRecursively: Boolean
+) : AbsScroll(input, enableClipRecursively) {
 
     override fun onAttach(activity: FragmentActivity) {
 

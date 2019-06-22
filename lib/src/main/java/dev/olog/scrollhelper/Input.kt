@@ -2,7 +2,7 @@ package dev.olog.scrollhelper
 
 import android.view.View
 
-inline class InitialHeight(val value: Int)
+typealias InitialHeight = Int
 
 sealed class Input(
     val toolbarHeight: InitialHeight,
@@ -10,8 +10,8 @@ sealed class Input(
 ) {
 
     init {
-        require(toolbarHeight.value >= 0)
-        tabLayoutHeight?.let { require(tabLayoutHeight.value > 0) }
+        require(toolbarHeight >= 0)
+        tabLayoutHeight?.let { require(tabLayoutHeight > 0) }
     }
 
     /**
@@ -25,8 +25,8 @@ sealed class Input(
     ) : Input(toolbarHeight, tabLayoutHeight) {
 
         init {
-            require(slidingPanel.second.value > 0)
-            require(bottomNavigation.second.value > 0)
+            require(slidingPanel.second > 0)
+            require(bottomNavigation.second > 0)
         }
 
     }
@@ -41,7 +41,7 @@ sealed class Input(
         val scrollableSlidingPanel: Boolean
     ) : Input(toolbarHeight, tabLayoutHeight) {
         init {
-            require(slidingPanel.second.value > 0)
+            require(slidingPanel.second > 0)
         }
     }
 
@@ -54,7 +54,7 @@ sealed class Input(
         tabLayoutHeight: InitialHeight? = null
     ) : Input(toolbarHeight, tabLayoutHeight) {
         init {
-            require(bottomNavigation.second.value > 0)
+            require(bottomNavigation.second > 0)
         }
     }
 

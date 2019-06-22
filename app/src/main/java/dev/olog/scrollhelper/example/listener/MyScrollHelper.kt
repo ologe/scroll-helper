@@ -14,8 +14,9 @@ import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
 class MyScrollHelper(
     activity: FragmentActivity,
-    input: Input
-) : ScrollHelper(activity, input) {
+    input: Input,
+    enableClipRecursively: Boolean
+) : ScrollHelper(activity, input, enableClipRecursively) {
 
     /**
      * Override this to restore your custom views to their start position

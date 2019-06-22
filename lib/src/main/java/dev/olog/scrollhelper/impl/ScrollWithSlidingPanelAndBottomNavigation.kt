@@ -6,13 +6,17 @@ import androidx.core.math.MathUtils.clamp
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import dev.olog.scrollhelper.InitialHeight
 import dev.olog.scrollhelper.Input
 import dev.olog.scrollhelper.SlidingPanelListener
 
-internal class ScrollWithSlidingPanelAndBottomNavigation(input: Input.Full) : AbsScroll(input) {
+internal class ScrollWithSlidingPanelAndBottomNavigation(
+    input: Input.Full,
+    enableClipRecursively: Boolean
+) : AbsScroll(input, enableClipRecursively) {
 
-    private val slidingPanelHeight: Int = input.slidingPanel.second.value
-    private val slidingPanelPlusNavigationHeight: Int = slidingPanelHeight + input.bottomNavigation.second.value
+    private val slidingPanelHeight: InitialHeight = input.slidingPanel.second
+    private val slidingPanelPlusNavigationHeight: InitialHeight = slidingPanelHeight + input.bottomNavigation.second
 
     private val slidingPanel = input.slidingPanel.first
     private val bottomNavigation = input.bottomNavigation.first

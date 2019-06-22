@@ -5,16 +5,18 @@ import android.view.ViewGroup
 import androidx.core.math.MathUtils.clamp
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import dev.olog.scrollhelper.InitialHeight
 import dev.olog.scrollhelper.Input
 
 internal class ScrollWithSlidingPanel(
-    input: Input.OnlySlidingPanel
-) : AbsScroll(input) {
+    input: Input.OnlySlidingPanel,
+    enableClipRecursively: Boolean
+) : AbsScroll(input, enableClipRecursively) {
 
     private val scrollSlidingPanel = input.scrollableSlidingPanel
 
     private val slidingPanel = input.slidingPanel.first
-    private val slidingPanelHeight: Int = input.slidingPanel.second.value
+    private val slidingPanelHeight: InitialHeight = input.slidingPanel.second
 
     private var currentPeekHeight = slidingPanelHeight
 
@@ -28,7 +30,7 @@ internal class ScrollWithSlidingPanel(
 
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
         super.restoreInitialPosition(recyclerView)
-        if (!scrollSlidingPanel){
+        if (!scrollSlidingPanel) {
             return
         }
         currentPeekHeight = slidingPanelHeight
@@ -38,7 +40,7 @@ internal class ScrollWithSlidingPanel(
 
     override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onRecyclerViewScrolled(recyclerView, dx, dy)
-        if (!scrollSlidingPanel){
+        if (!scrollSlidingPanel) {
             return
         }
         currentPeekHeight = clamp(
@@ -47,8 +49,9 @@ internal class ScrollWithSlidingPanel(
             slidingPanelHeight
         )
         slidingPanel.peekHeight = currentPeekHeight
-        fabMap.get(recyclerView.hashCode())?.let { it.translationY =
-            (slidingPanelHeight - currentPeekHeight).toFloat()
+        fabMap.get(recyclerView.hashCode())?.let {
+            it.translationY =
+                (slidingPanelHeight - currentPeekHeight).toFloat()
         }
     }
 
