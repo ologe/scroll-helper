@@ -1,17 +1,12 @@
 package dev.olog.scrollhelper
 
 import androidx.fragment.app.FragmentManager
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 
-/**
- * Used to restore scrolling when the list contains too few items or the selected page never scrolled
- */
-internal typealias PagePosition = Int
-
-internal class ViewPagerListener(
+internal class ViewPager2Listener(
     private val fm: FragmentManager,
     private val onPageChanged: (FragmentManager, PagePosition) -> Unit
-) : ViewPager.SimpleOnPageChangeListener() {
+) : ViewPager2.OnPageChangeCallback() {
 
     private var lastPage = -1
 

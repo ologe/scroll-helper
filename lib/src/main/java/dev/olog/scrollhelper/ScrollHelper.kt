@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import dev.olog.scrollhelper.impl.*
 
 abstract class ScrollHelper(
@@ -61,9 +61,9 @@ abstract class ScrollHelper(
             }
 
             searchForViewPager(fragment)?.let { viewPager ->
-                val listener = ViewPagerListener(fragment.childFragmentManager, ::onPageChanged)
+                val listener = ViewPager2Listener(fragment.childFragmentManager, ::onPageChanged)
                 impl.viewPagerListenerMap.append(viewPager.hashCode(), listener)
-                viewPager.addOnPageChangeListener(listener)
+                viewPager.registerOnPageChangeCallback(listener)
             }
 
             searchForRecyclerView(fragment)?.let { recyclerView ->
@@ -99,7 +99,7 @@ abstract class ScrollHelper(
 
             searchForViewPager(fragment)?.let { viewPager ->
                 val listener = impl.viewPagerListenerMap.get(viewPager.hashCode())
-                viewPager.removeOnPageChangeListener(listener)
+                viewPager.unregisterOnPageChangeCallback(listener)
                 impl.viewPagerListenerMap.remove(viewPager.hashCode())
             }
 
@@ -159,7 +159,7 @@ abstract class ScrollHelper(
      * @param fragment the fragment where to search
      * @return the view pager of current fragment (if any)
      */
-    protected abstract fun searchForViewPager(fragment: Fragment): ViewPager?
+    protected abstract fun searchForViewPager(fragment: Fragment): ViewPager2?
 
     /**
      * Search for toolbar in current view
