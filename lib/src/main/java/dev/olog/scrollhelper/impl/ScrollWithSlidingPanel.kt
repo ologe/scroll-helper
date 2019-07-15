@@ -34,7 +34,7 @@ internal class ScrollWithSlidingPanel(
             return
         }
         currentPeekHeight = slidingPanelHeight
-        slidingPanel.peekHeight = slidingPanelHeight
+        slidingPanel.panelHeight = slidingPanelHeight
 
     }
 
@@ -48,7 +48,7 @@ internal class ScrollWithSlidingPanel(
             0,
             slidingPanelHeight
         )
-        slidingPanel.peekHeight = currentPeekHeight
+        slidingPanel.panelHeight = currentPeekHeight
         fabMap.get(recyclerView.hashCode())?.let {
             it.translationY =
                 (slidingPanelHeight - currentPeekHeight).toFloat()

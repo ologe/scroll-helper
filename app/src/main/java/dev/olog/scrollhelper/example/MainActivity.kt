@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.scrollhelper.Input
-import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.listener.MyScrollHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -31,6 +29,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        fake.setOnTouchListener { v, event ->
+            fragmentContainer.dispatchTouchEvent(event)
+        }
 
         when (type) {
             Type.ONLY_SLIDING_PANEL -> {
@@ -74,17 +76,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupScrollBehavior() {
-        val slidingPanel = findViewById<View>(R.id.slidingPanel)
-
-        val slidingPanelBehavior =
-            if (slidingPanel != null) BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
-            else null
-        val bottomNavigation = findViewById<View>(R.id.bottomNavigation)
 
         val input: Input = when (type) {
             Type.FULL -> {
                 Input.Full(
-                    slidingPanelBehavior!! to dimen(R.dimen.sliding_panel),
+                    slidingPanel to dimen(R.dimen.sliding_panel),
                     bottomNavigation to dimen(R.dimen.bottomNavigation),
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout)
@@ -92,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             }
             Type.ONLY_SLIDING_PANEL -> {
                 Input.OnlySlidingPanel(
-                    slidingPanelBehavior!! to dimen(R.dimen.sliding_panel),
+                    slidingPanel to dimen(R.dimen.sliding_panel),
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout),
                     scrollableSlidingPanel = true
