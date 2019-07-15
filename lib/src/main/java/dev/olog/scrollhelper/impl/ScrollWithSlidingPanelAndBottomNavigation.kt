@@ -41,7 +41,7 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
             slidingPanelHeight,
             slidingPanelPlusNavigationHeight
         )
-        slidingPanel.panelHeight = clampedSlidingPanelTranslationY
+        slidingPanel.peekHeight = clampedSlidingPanelTranslationY
         bottomNavigation.translationY = clampedNavigationTranslation
 
         fabMap.get(recyclerView.hashCode())?.let { it.translationY = clampedNavigationTranslation }
@@ -50,7 +50,7 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
         super.restoreInitialPosition(recyclerView)
         bottomNavigation.animate()?.translationY(0f)
-        slidingPanel.panelHeight = slidingPanelPlusNavigationHeight
+        slidingPanel.peekHeight = slidingPanelPlusNavigationHeight
     }
 
     override fun applyInsetsToList(list: RecyclerView, toolbar: View?, tabLayout: View?) {

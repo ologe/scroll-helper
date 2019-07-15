@@ -1,7 +1,6 @@
 package dev.olog.scrollhelper
 
 import android.view.View
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 typealias InitialHeight = Int
 
@@ -19,7 +18,7 @@ sealed class Input(
      * Handles both sliding panel and bottom sheet
      */
     class Full(
-        val slidingPanel: Pair<SlidingUpPanelLayout, InitialHeight>,
+        val slidingPanel: Pair<MultiListenerBottomSheetBehavior<*>, InitialHeight>,
         val bottomNavigation: Pair<View, InitialHeight>,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null
@@ -36,7 +35,7 @@ sealed class Input(
      * Handles only sliding panel
      */
     class OnlySlidingPanel(
-        val slidingPanel: Pair<SlidingUpPanelLayout, InitialHeight>,
+        val slidingPanel: Pair<MultiListenerBottomSheetBehavior<*>, InitialHeight>,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null,
         val scrollableSlidingPanel: Boolean
