@@ -12,8 +12,8 @@ android {
         // alpha 0
         // beta 1
         // release 2
-        versionCode 28_0_2_0_1
-        versionName "0.2-alpha01"
+        versionCode 28_0_2_0_2
+        versionName "0.2-alpha02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -40,8 +40,6 @@ dependencies {
 
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation "com.google.android.material:material:1.0.0"
-    implementation "androidx.viewpager2:viewpager2:1.0.0-alpha06"
-    api 'com.sothree.slidinguppanel:library:3.4.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

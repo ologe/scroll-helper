@@ -29,7 +29,7 @@ internal abstract class AbsScroll(
             clampedTabLayoutTranslation = MathUtils.clamp(toolbar.translationY - dy, -toolbar.height.toFloat(), 0f)
             // moves the toolbar just a little more than its height, to handle cases when status bar is transparent
             val clampedToolbarTranslation =
-                MathUtils.clamp(toolbar.translationY - dy, -toolbar.height.toFloat() * 1.2f, 0f)
+                MathUtils.clamp(toolbar.translationY - dy, -toolbar.height.toFloat() * 3f, 0f)
             toolbar.translationY = clampedToolbarTranslation
         }
         tabLayoutMap.get(recyclerView.hashCode())?.let { tabLayout ->
