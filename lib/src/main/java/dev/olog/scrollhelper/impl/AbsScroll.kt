@@ -10,7 +10,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.scrollhelper.Input
-import dev.olog.scrollhelper.ViewPager2Listener
+import dev.olog.scrollhelper.ViewPagerListener
 
 internal abstract class AbsScroll(
     private val input: Input,
@@ -20,7 +20,7 @@ internal abstract class AbsScroll(
     val toolbarMap = SparseArray<View>()
     val tabLayoutMap = SparseArray<View>()
     val fabMap = SparseArray<View>()
-    val viewPagerListenerMap = SparseArray<ViewPager2Listener>()
+    val viewPagerListenerMap = SparseArray<ViewPagerListener>()
 
     @CallSuper
     open fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
