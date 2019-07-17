@@ -10,22 +10,19 @@ import dev.olog.scrollhelper.Input
 
 internal class ScrollWithSlidingPanel(
     input: Input.OnlySlidingPanel,
-    enableClipRecursively: Boolean
-) : AbsScroll(input, enableClipRecursively) {
+    enableClipRecursively: Boolean,
+    debugScroll: Boolean
+) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
     private val scrollSlidingPanel = input.scrollableSlidingPanel
 
     private val slidingPanel = input.slidingPanel.first
     private val slidingPanelHeight: InitialHeight = input.slidingPanel.second
 
-    private var currentPeekHeight = slidingPanelHeight
-
     override fun onAttach(activity: FragmentActivity) {
-
     }
 
     override fun onDetach(activity: FragmentActivity) {
-
     }
 
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
@@ -33,7 +30,6 @@ internal class ScrollWithSlidingPanel(
         if (!scrollSlidingPanel) {
             return
         }
-        currentPeekHeight = slidingPanelHeight
         slidingPanel.peekHeight = slidingPanelHeight
 
     }
@@ -43,15 +39,20 @@ internal class ScrollWithSlidingPanel(
         if (!scrollSlidingPanel) {
             return
         }
-        currentPeekHeight = clamp(
-            currentPeekHeight - dy,
+        val newPeekHeight = clamp(
+            slidingPanel.peekHeight - dy,
             0,
             slidingPanelHeight
         )
-        slidingPanel.peekHeight = currentPeekHeight
+
+        logVerbose { """
+             onRecyclerViewScrolled: translating sliding panel
+                from=${slidingPanel.peekHeight} to $newPeekHeight
+        """.trimIndent() }
+
+        slidingPanel.peekHeight = newPeekHeight
         fabMap.get(recyclerView.hashCode())?.let {
-            it.translationY =
-                (slidingPanelHeight - currentPeekHeight).toFloat()
+            it.translationY = (slidingPanelHeight - newPeekHeight).toFloat()
         }
     }
 

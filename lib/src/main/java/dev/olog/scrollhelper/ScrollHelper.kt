@@ -13,7 +13,8 @@ abstract class ScrollHelper(
     private val activity: FragmentActivity,
     input: Input,
     enableClipRecursively: Boolean,
-    private val debugMode: Boolean
+    private val debug: Boolean,
+    debugScroll: Boolean
 ) {
 
     companion object {
@@ -22,15 +23,31 @@ abstract class ScrollHelper(
     }
 
     private val impl: AbsScroll = when (input) {
-        is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(input, enableClipRecursively)
-        is Input.OnlyBottomNavigation -> ScrollWithBottomNavigation(input, enableClipRecursively)
-        is Input.OnlySlidingPanel -> ScrollWithSlidingPanel(input, enableClipRecursively)
-        is Input.None -> ScrollWithOnlyToolbarAndTabLayout(input, enableClipRecursively)
+        is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(
+            input,
+            enableClipRecursively,
+            debugScroll
+        )
+        is Input.OnlyBottomNavigation -> ScrollWithBottomNavigation(
+            input,
+            enableClipRecursively,
+            debugScroll
+        )
+        is Input.OnlySlidingPanel -> ScrollWithSlidingPanel(
+            input,
+            enableClipRecursively,
+            debugScroll
+        )
+        is Input.None -> ScrollWithOnlyToolbarAndTabLayout(
+            input,
+            enableClipRecursively,
+            debugScroll
+        )
 
     }
 
     private inline fun logVerbose(msg: () -> String) {
-        if (debugMode) {
+        if (debug) {
             Log.v(TAG, msg())
         }
     }
@@ -189,7 +206,10 @@ abstract class ScrollHelper(
 
     @Suppress("NOTHING_TO_INLINE")
     // assumes that uses view pager default tag -> [android:switcher:containerId:pagePosition]
-    private inline fun filterViewPagerFragmentWithPosition(fragment: Fragment, position: PagePosition): Boolean {
+    private inline fun filterViewPagerFragmentWithPosition(
+        fragment: Fragment,
+        position: PagePosition
+    ): Boolean {
         val tag = fragment.tag ?: ""
         return tag.startsWith(VIEW_PAGER_TAG_START) && tag.last().toString() == "$position"
     }

@@ -16,7 +16,7 @@ class MyScrollHelper(
     activity: FragmentActivity,
     input: Input,
     enableClipRecursively: Boolean
-) : ScrollHelper(activity, input, enableClipRecursively) {
+) : ScrollHelper(activity, input, enableClipRecursively, true, true) {
 
     /**
      * Override this to restore your custom views to their start position

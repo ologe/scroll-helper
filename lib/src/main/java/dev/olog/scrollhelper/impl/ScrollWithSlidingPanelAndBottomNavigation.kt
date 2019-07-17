@@ -12,8 +12,9 @@ import dev.olog.scrollhelper.SlidingPanelListener
 
 internal class ScrollWithSlidingPanelAndBottomNavigation(
     input: Input.Full,
-    enableClipRecursively: Boolean
-) : AbsScroll(input, enableClipRecursively) {
+    enableClipRecursively: Boolean,
+    debugScroll: Boolean
+) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
     private val slidingPanelHeight: InitialHeight = input.slidingPanel.second
     private val slidingPanelPlusNavigationHeight: InitialHeight = slidingPanelHeight + input.bottomNavigation.second
@@ -21,8 +22,7 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     private val slidingPanel = input.slidingPanel.first
     private val bottomNavigation = input.bottomNavigation.first
 
-    private val slidingPanelListener by lazy(LazyThreadSafetyMode.NONE) { SlidingPanelListener(bottomNavigation!!) }
-
+    private val slidingPanelListener by lazy(LazyThreadSafetyMode.NONE) { SlidingPanelListener(bottomNavigation) }
 
     override fun onAttach(activity: FragmentActivity) {
         slidingPanel.addPanelSlideListener(slidingPanelListener)
@@ -34,13 +34,24 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
 
     override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onRecyclerViewScrolled(recyclerView, dx, dy)
+
         val clampedNavigationTranslation =
             clamp(bottomNavigation.translationY + dy, 0f, bottomNavigation.height.toFloat())
+
         val clampedSlidingPanelTranslationY = clamp(
             slidingPanelPlusNavigationHeight - clampedNavigationTranslation.toInt(),
             slidingPanelHeight,
             slidingPanelPlusNavigationHeight
         )
+
+        logVerbose {
+            """
+                onRecyclerViewScrolled: 
+                    - translating sliding panel from ${slidingPanel.peekHeight} to $clampedSlidingPanelTranslationY
+                    - translating bottom navigation from ${bottomNavigation.translationY} to $clampedNavigationTranslation
+            """.trimIndent()
+        }
+
         slidingPanel.peekHeight = clampedSlidingPanelTranslationY
         bottomNavigation.translationY = clampedNavigationTranslation
 

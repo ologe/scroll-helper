@@ -11,7 +11,7 @@ import dev.olog.scrollhelper.ScrollHelper
 class TestScrollHelper(
     activity: FragmentActivity,
     input: Input
-) : ScrollHelper(activity, input, true){
+) : ScrollHelper(activity, input, true, false, false) {
 
     override fun skipFragment(fragment: Fragment): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

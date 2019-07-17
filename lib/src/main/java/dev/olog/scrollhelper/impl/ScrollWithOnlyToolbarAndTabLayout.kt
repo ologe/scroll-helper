@@ -9,8 +9,9 @@ import dev.olog.scrollhelper.Input
  */
 internal class ScrollWithOnlyToolbarAndTabLayout(
     input: Input.None,
-    enableClipRecursively: Boolean
-) : AbsScroll(input, enableClipRecursively) {
+    enableClipRecursively: Boolean,
+    debugScroll: Boolean
+) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
     override fun onAttach(activity: FragmentActivity) {
 
