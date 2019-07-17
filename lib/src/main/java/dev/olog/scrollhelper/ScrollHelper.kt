@@ -1,5 +1,6 @@
 package dev.olog.scrollhelper
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -11,9 +12,14 @@ import dev.olog.scrollhelper.impl.*
 abstract class ScrollHelper(
     private val activity: FragmentActivity,
     input: Input,
-    enableClipRecursively: Boolean
+    enableClipRecursively: Boolean,
+    private val debugMode: Boolean
 ) {
 
+    companion object {
+        private const val TAG = "ScrollHelper"
+        private const val VIEW_PAGER_TAG_START = "android:switcher"
+    }
 
     private val impl: AbsScroll = when (input) {
         is Input.Full -> ScrollWithSlidingPanelAndBottomNavigation(input, enableClipRecursively)
@@ -23,26 +29,43 @@ abstract class ScrollHelper(
 
     }
 
+    private inline fun logVerbose(msg: () -> String) {
+        if (debugMode) {
+            Log.v(TAG, msg())
+        }
+    }
+
     /**
      * Attach listeners
      */
     open fun onAttach() {
+        logVerbose { "onAttach" }
+
         impl.onAttach(activity)
-        activity.supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, true)
+        activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+            fragmentLifecycleCallbacks,
+            true
+        )
     }
 
     /**
      * Detach listeners
      */
     open fun onDetach() {
+        logVerbose { "onDetach" }
+
         impl.onDetach(activity)
-        activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks)
+        activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(
+            fragmentLifecycleCallbacks
+        )
     }
 
     /**
      * Clear resources
      */
     open fun dispose() {
+        logVerbose { "dispose" }
+
         impl.dispose()
     }
 
@@ -56,29 +79,43 @@ abstract class ScrollHelper(
     private val fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
 
         override fun onFragmentResumed(fm: FragmentManager, fragment: Fragment) {
+            logVerbose { "onFragmentResumed=${fragment.tag}" }
             if (fragment.view == null || skipFragment(fragment)) {
+                logVerbose { "skipping" }
                 return
             }
 
+            logVerbose { "search view pager" }
+
             searchForViewPager(fragment)?.let { viewPager ->
+                logVerbose { "view pager found" }
                 val listener = ViewPagerListener(fragment.childFragmentManager, ::onPageChanged)
                 impl.viewPagerListenerMap.append(viewPager.hashCode(), listener)
                 viewPager.addOnPageChangeListener(listener)
             }
 
+            logVerbose { "search recycler view" }
             searchForRecyclerView(fragment)?.let { recyclerView ->
+                logVerbose { "recycler view found" }
                 // recycler view found, add scroll listener
                 recyclerView.addOnScrollListener(onScrollListener)
+
+                logVerbose { "search toolbar" }
                 // map recycler view to toolbar
                 searchForToolbar(fragment)?.let {
+                    logVerbose { "toolbar found" }
                     impl.toolbarMap.append(recyclerView.hashCode(), it)
                 }
+                logVerbose { "search tab layout" }
                 // map recycler view to tabLayout
                 searchForTabLayout(fragment)?.let {
+                    logVerbose { "tab layout found" }
                     impl.tabLayoutMap.append(recyclerView.hashCode(), it)
                 }
+                logVerbose { "search fab" }
                 // map recycler view to fab
                 searchForFab(fragment)?.let { fab ->
+                    logVerbose { "fab found" }
                     impl.fabMap.append(recyclerView.hashCode(), fab)
                     applyMarginToFab(fragment, fab)
                 }
@@ -90,26 +127,34 @@ abstract class ScrollHelper(
                     impl.tabLayoutMap.get(recyclerView.hashCode())
                 )
             }
+            logVerbose { "****" }
         }
 
         override fun onFragmentPaused(fm: FragmentManager, fragment: Fragment) {
+            logVerbose { "onFragmentPaused=${fragment.tag}" }
             if (skipFragment(fragment)) {
+                logVerbose { "skipping" }
                 return
             }
 
+            logVerbose { "search view pager" }
             searchForViewPager(fragment)?.let { viewPager ->
+                logVerbose { "view pager found" }
                 val listener = impl.viewPagerListenerMap.get(viewPager.hashCode())
                 viewPager.removeOnPageChangeListener(listener)
                 impl.viewPagerListenerMap.remove(viewPager.hashCode())
             }
 
+            logVerbose { "search recycler view" }
             searchForRecyclerView(fragment)?.let { recyclerView ->
+                logVerbose { "recycler view found" }
                 // recycler view found, detach listener and clean
                 recyclerView.removeOnScrollListener(onScrollListener)
                 impl.fabMap.remove(recyclerView.hashCode())
                 impl.toolbarMap.remove(recyclerView.hashCode())
                 impl.tabLayoutMap.remove(recyclerView.hashCode())
             }
+            logVerbose { "****" }
         }
 
     }
@@ -126,18 +171,27 @@ abstract class ScrollHelper(
      * TODO need to fix animation
      */
     protected open fun restoreInitialPosition(recyclerView: RecyclerView) {
+        logVerbose { "restoreInitialPosition" }
         impl.restoreInitialPosition(recyclerView)
     }
 
-    // assumes that uses view pager default tag -> [android:switcher:containerId:pagePosition]
     protected open fun onPageChanged(fm: FragmentManager, position: PagePosition) {
-        val fragment = fm.fragments.find { it.tag?.last().toString() == position.toString() } ?: return
+        logVerbose { "view pager page change $position" }
+        val fragment = fm.fragments
+            .find { filterViewPagerFragmentWithPosition(it, position) } ?: return
 
         val recyclerView = searchForRecyclerView(fragment) ?: return
         if (!recyclerView.canScrollVertically(-1)) {
             // there are no items offscreen, restore views to their initial position
             restoreInitialPosition(recyclerView)
         }
+    }
+
+    @Suppress("NOTHING_TO_INLINE")
+    // assumes that uses view pager default tag -> [android:switcher:containerId:pagePosition]
+    private inline fun filterViewPagerFragmentWithPosition(fragment: Fragment, position: PagePosition): Boolean {
+        val tag = fragment.tag ?: ""
+        return tag.startsWith(VIEW_PAGER_TAG_START) && tag.last().toString() == "$position"
     }
 
     /**
@@ -188,7 +242,13 @@ abstract class ScrollHelper(
      * @param toolbar associated toolbar
      * @param tabLayout associated tabLayout
      */
-    protected open fun applyInsetsToList(fragment: Fragment, list: RecyclerView, toolbar: View?, tabLayout: View?) {
+    protected open fun applyInsetsToList(
+        fragment: Fragment,
+        list: RecyclerView,
+        toolbar: View?,
+        tabLayout: View?
+    ) {
+        logVerbose { "apply insets to list" }
         impl.applyInsetsToList(list, toolbar, tabLayout)
     }
 
@@ -197,6 +257,7 @@ abstract class ScrollHelper(
      * @param fab view to apply margin
      */
     protected open fun applyMarginToFab(fragment: Fragment, fab: View) {
+        logVerbose { "apply margin to fab" }
         impl.applyMarginToFab(fab)
     }
 
