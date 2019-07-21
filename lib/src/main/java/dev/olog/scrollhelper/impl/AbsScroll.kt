@@ -50,10 +50,10 @@ internal abstract class AbsScroll(
 
             // moves the toolbar just a little more than its height, to handle cases when status bar is transparent
             val clampedToolbarTranslation =
-                clamp(currentToolbarTranslation - dy, -toolbarHeight * 3f, 0f)
+                clamp(currentToolbarTranslation - dy, -toolbarHeight, 0f)
 
             logVerbose {
-                "onRecyclerViewScrolled: translating toolbar from=${toolbar.translationY} to $clampedToolbarTranslation min=${-toolbarHeight * 3f}, max=${0}"
+                "onRecyclerViewScrolled: translating toolbar from=${toolbar.translationY} to $clampedToolbarTranslation min=${-toolbarHeight}, max=${0}"
             }
 
             toolbar.translationY = clampedToolbarTranslation
