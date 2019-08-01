@@ -7,6 +7,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ScrollType
 import kotlin.math.abs
@@ -17,15 +18,11 @@ internal class ScrollWithSlidingPanel(
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
-    companion object {
-        private const val TOLERANCE = 0.01
-    }
-
     private val scrollSlidingPanel: Boolean = input.scrollableSlidingPanel
 
     private val slidingPanel: View = input.slidingPanel
     private val slidingPanelBehavior =
-        BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
+        from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
 
     override fun onAttach(activity: FragmentActivity) {
     }
@@ -59,14 +56,9 @@ internal class ScrollWithSlidingPanel(
         """.trimIndent()
         }
 
-        if (abs(slidingPanel.translationY - newPeekHeight) > TOLERANCE &&
-            slidingPanelBehavior.state == BottomSheetBehavior.STATE_COLLAPSED
-        ) {
-            slidingPanel.translationY = newPeekHeight
-
-            fabMap.get(recyclerView.hashCode())?.let {
-                it.translationY = slidingPanel.translationY
-            }
+        updateOnlyIfNeeded(slidingPanel, newPeekHeight)
+        fabMap.get(recyclerView.hashCode())?.let {
+            updateOnlyIfNeeded(it, slidingPanel.translationY)
         }
     }
 
@@ -81,4 +73,13 @@ internal class ScrollWithSlidingPanel(
             }
         }
     }
+
+    override fun updateOnlyIfNeeded(view: View, translationY: Float) {
+        if (abs(view.translationY - translationY) > TOLERANCE &&
+            slidingPanelBehavior.state == STATE_COLLAPSED
+        ) {
+            view.translationY = translationY
+        }
+    }
+
 }

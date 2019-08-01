@@ -21,10 +21,6 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
-    companion object {
-        private const val TOLERANCE = 0.01
-    }
-
     private val slidingPanel = input.slidingPanel
     private val slidingPanelBehavior = from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
     private val bottomNavigation = input.bottomNavigation
@@ -68,27 +64,12 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
             """.trimIndent()
         }
 
-        // translate only if collapsed, avoid collision with sliding panel listener
-        val isSlidingPanelCollapsed = slidingPanelBehavior.state == STATE_COLLAPSED
+        updateOnlyIfNeeded(slidingPanel, clampedNavigationTranslation)
 
-        if (abs(slidingPanel.translationY - clampedNavigationTranslation) > TOLERANCE &&
-            isSlidingPanelCollapsed
-        ) {
-            slidingPanel.translationY = clampedNavigationTranslation
-        }
-
-        if (abs(bottomNavigation.translationY - clampedNavigationTranslation) > TOLERANCE &&
-            isSlidingPanelCollapsed
-        ) {
-            bottomNavigation.translationY = clampedNavigationTranslation
-        }
+        updateOnlyIfNeeded(bottomNavigation, clampedNavigationTranslation)
 
         fabMap.get(recyclerView.hashCode())?.let { fab ->
-            if (abs(fab.translationY - clampedNavigationTranslation) > TOLERANCE &&
-                isSlidingPanelCollapsed
-            ) {
-                fab.translationY = clampedNavigationTranslation
-            }
+            updateOnlyIfNeeded(fab, clampedNavigationTranslation)
         }
     }
 
@@ -119,6 +100,14 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
                 params.bottomMargin += marginsToApply
                 fab.layoutParams = params
             }
+        }
+    }
+
+    override fun updateOnlyIfNeeded(view: View, translationY: Float) {
+        if (abs(view.translationY - translationY) > TOLERANCE &&
+            slidingPanelBehavior.state == STATE_COLLAPSED
+        ) {
+            view.translationY = translationY
         }
     }
 }

@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             }
             Type.ONLY_BOTTOM_NAVIGATION -> {
                 ScrollType.OnlyBottomNavigation(
-                    bottomNavigation to dimen(R.dimen.bottomNavigation),
+                    bottomNavigation,
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )

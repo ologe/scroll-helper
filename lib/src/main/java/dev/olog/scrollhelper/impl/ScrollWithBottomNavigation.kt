@@ -3,6 +3,7 @@ package dev.olog.scrollhelper.impl
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.math.MathUtils.clamp
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.scrollhelper.ScrollType
@@ -13,15 +14,12 @@ internal class ScrollWithBottomNavigation(
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
-    private val bottomNavigation = input.bottomNavigation.first
-    private val bottomNavigationHeight = input.bottomNavigation.second
+    private val bottomNavigation = input.bottomNavigation
 
     override fun onAttach(activity: FragmentActivity) {
-
     }
 
     override fun onDetach(activity: FragmentActivity) {
-
     }
 
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
@@ -42,20 +40,22 @@ internal class ScrollWithBottomNavigation(
             """.trimIndent()
         }
 
-        bottomNavigation.translationY = clampedNavigationTranslation
+        updateOnlyIfNeeded(bottomNavigation, clampedNavigationTranslation)
 
         fabMap.get(recyclerView.hashCode())?.let {
-            it.translationY = clampedNavigationTranslation
+            updateOnlyIfNeeded(it, clampedNavigationTranslation)
         }
     }
 
     override fun applyMarginToFab(fab: View) {
-        val params = fab.layoutParams
-        val marginsToApply = bottomNavigationHeight.toInt()
+        fab.doOnPreDraw {
+            val params = fab.layoutParams
+            val marginsToApply = bottomNavigation.height
 
-        if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
-            params.bottomMargin += marginsToApply
-            fab.layoutParams = params
+            if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
+                params.bottomMargin += marginsToApply
+                fab.layoutParams = params
+            }
         }
     }
 }

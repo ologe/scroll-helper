@@ -49,14 +49,10 @@ sealed class ScrollType(
      * Handles only bottom navigation
      */
     class OnlyBottomNavigation(
-        val bottomNavigation: Pair<View, InitialHeight>,
+        val bottomNavigation: View,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null
-    ) : ScrollType(toolbarHeight, tabLayoutHeight) {
-        init {
-            require(bottomNavigation.second > 0)
-        }
-    }
+    ) : ScrollType(toolbarHeight, tabLayoutHeight)
 
     /**
      * No sliding panel, neither bottom navigation

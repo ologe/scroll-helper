@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.ViewPagerListener
+import kotlin.math.abs
 
 internal abstract class AbsScroll(
     private val input: ScrollType,
@@ -21,6 +22,7 @@ internal abstract class AbsScroll(
 
     companion object {
         private const val TAG = "ScrollHelper"
+        const val TOLERANCE = 0.01
     }
 
     val toolbarMap = SparseArray<View>()
@@ -56,14 +58,14 @@ internal abstract class AbsScroll(
                 "onRecyclerViewScrolled: translating toolbar from=${toolbar.translationY} to $clampedToolbarTranslation min=${-toolbarHeight}, max=${0}"
             }
 
-            toolbar.translationY = clampedToolbarTranslation
+            updateOnlyIfNeeded(toolbar, clampedToolbarTranslation)
         }
 
         tabLayoutMap.get(recyclerView.hashCode())?.let { tabLayout ->
             logVerbose {
                 "onRecyclerViewScrolled: translating tab layout from=${tabLayout.translationY} to $clampedTabLayoutTranslation"
             }
-            tabLayout.translationY = clampedTabLayoutTranslation
+            updateOnlyIfNeeded(tabLayout, clampedTabLayoutTranslation)
         }
     }
 
@@ -118,6 +120,12 @@ internal abstract class AbsScroll(
         tabLayoutMap.clear()
         fabMap.clear()
         viewPagerListenerMap.clear()
+    }
+
+    protected open fun updateOnlyIfNeeded(view: View, translationY: Float){
+        if (abs(view.translationY - translationY) > TOLERANCE){
+            view.translationY = translationY
+        }
     }
 
 }
