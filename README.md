@@ -5,6 +5,13 @@ BottomNavigationView in every fragment of an activity.
 After a fast setup, the library will automatically animate the Toolbar, TabLayout, the BottomSheet,
 the NavigationBar and the FloatingActionButton depending on how you setup the library.  
 
+## Screenshots
+<div style="dispaly:flex">
+    <img src="https://github.com/ologe/scroll-helper/blob/master/gifs/gif1.gif" width="32%">
+    <img src="https://github.com/ologe/scroll-helper/blob/master/gifs/gif2.gif" width="32%">
+    <img src="https://github.com/ologe/scroll-helper/blob/master/gifs/gif3.gif" width="32%">
+</div>
+
 ### Usage
 
 - Extend `ScrollHelper` class and override all abstract methods.
