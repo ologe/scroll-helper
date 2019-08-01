@@ -1,7 +1,89 @@
-# Scroll Helper (work in progress)
+# Scroll Helper
 
-Small API that handles automatically scrolling of Toolbar, TabLayout, Sliding Panel and
-BottomNavigationView in every fragment of an activity 
+Small API that handles automatically scrolling of Toolbar, TabLayout, Material BottomSheet and
+BottomNavigationView in every fragment of an activity.
+After a fast setup, the library will automatically animate the Toolbar, TabLayout, the BottomSheet,
+the NavigationBar and the FloatingActionButton depending on how you setup the library.  
 
-## Usage
+### Usage
 
+- Extend `ScrollHelper` class and override all abstract methods.
+
+Then instantiate the class in `onCreate` or your activity, and then call `onAttach`, `onDetach` and `dispose`:
+```kotlin
+class MyActivity : AppCompatActivity(){
+    
+    private lateinit var myScrollerHelper: MyScrollHelper
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        myScrollerHelper = MyScrollHelper(
+            slidingPanel = slidingPanel,
+            bottomNavigation = bottomNavigation,
+            toolbarHeight = dimen(R.dimen.toolbar),
+            tabLayoutHeight = dimen(R.dimen.tabLayout)
+        )
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        myScrollerHelper.onAttach()
+    }
+    
+    override fun onPause() {
+        super.onPause()
+        myScrollerHelper.onDetach()
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        myScrollerHelper.dispose()
+    }
+    
+}
+```
+
+Your **activity.xml** should be similar to this:
+- CoordinatorLayout has to be the root view to enable BottomSheet.
+- The sliding panel must have app:layout_behavior="dev.olog.scrollhelper.MultiListenerBottomSheetBehavior" 
+    that enables multiple bottom sheet callbacks
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/slidingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:behavior_peekHeight="@dimen/sliding_panel"
+            app:layout_behavior="dev.olog.scrollhelper.MultiListenerBottomSheetBehavior">
+
+<!--       bottom sheet content-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottomNavigation"
+            android:layout_gravity="bottom" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+```
+
+### Caveats, Additional Features and Customization
+- All the needed insets of RecyclerView and FAB will be applied automatically to avoid overlapping with 
+the moving views.
+- The library provides 4 behaviors (see the sample app):
+    - Full scroll (toolbar, tab layout, BottomSheet and bottom navigation)
+    - BottomSheet only (toolbar, tab layout and BottomSheet)
+    - BottomNavigationView only (toolbar, tab layout, BottomNavigationView)
+    - TabLayout and Toolbar only

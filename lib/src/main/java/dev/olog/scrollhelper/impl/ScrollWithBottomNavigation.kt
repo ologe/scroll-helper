@@ -2,14 +2,13 @@ package dev.olog.scrollhelper.impl
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.math.MathUtils
 import androidx.core.math.MathUtils.clamp
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.scrollhelper.Input
+import dev.olog.scrollhelper.ScrollType
 
 internal class ScrollWithBottomNavigation(
-    input: Input.OnlyBottomNavigation,
+    input: ScrollType.OnlyBottomNavigation,
     enableClipRecursively: Boolean,
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
@@ -52,7 +51,7 @@ internal class ScrollWithBottomNavigation(
 
     override fun applyMarginToFab(fab: View) {
         val params = fab.layoutParams
-        val marginsToApply = bottomNavigationHeight
+        val marginsToApply = bottomNavigationHeight.toInt()
 
         if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
             params.bottomMargin += marginsToApply

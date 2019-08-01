@@ -5,12 +5,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import dev.olog.scrollhelper.Input
+import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.ScrollHelper
 
 class TestScrollHelper(
     activity: FragmentActivity,
-    input: Input
+    input: ScrollType
 ) : ScrollHelper(activity, input, true, false, false) {
 
     override fun skipFragment(fragment: Fragment): Boolean {

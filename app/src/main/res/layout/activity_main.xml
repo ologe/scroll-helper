@@ -2,49 +2,50 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity"
-        android:id="@+id/root">
+        tools:context=".MainActivity">
 
     <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/slidingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?colorSurface"
+            android:clickable="true"
             android:elevation="2dp"
+            android:focusable="true"
             app:behavior_hideable="false"
             app:behavior_peekHeight="@dimen/sliding_panel"
             app:layout_behavior="dev.olog.scrollhelper.MultiListenerBottomSheetBehavior">
 
         <ImageView
                 android:id="@+id/cover"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/sliding_panel"
-                app:layout_constraintDimensionRatio="1"
+                android:padding="8dp"
                 android:src="@drawable/ic_launcher_background"
-                android:padding="8dp"/>
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <View
                 android:id="@+id/text"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cover"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/sliding_panel"
-                android:background="#4000" />
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="#4000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cover"
+                app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

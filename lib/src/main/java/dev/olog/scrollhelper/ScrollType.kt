@@ -1,10 +1,11 @@
 package dev.olog.scrollhelper
 
 import android.view.View
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 typealias InitialHeight = Int
 
-sealed class Input(
+sealed class ScrollType(
     val toolbarHeight: InitialHeight,
     val tabLayoutHeight: InitialHeight? = null
 ) {
@@ -18,15 +19,14 @@ sealed class Input(
      * Handles both sliding panel and bottom sheet
      */
     class Full(
-        val slidingPanel: Pair<MultiListenerBottomSheetBehavior<*>, InitialHeight>,
-        val bottomNavigation: Pair<View, InitialHeight>,
+        val slidingPanel: View,
+        val bottomNavigation: View,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null
-    ) : Input(toolbarHeight, tabLayoutHeight) {
+    ) : ScrollType(toolbarHeight, tabLayoutHeight) {
 
         init {
-            require(slidingPanel.second > 0)
-            require(bottomNavigation.second > 0)
+            require(BottomSheetBehavior.from(slidingPanel) is MultiListenerBottomSheetBehavior<*>)
         }
 
     }
@@ -35,13 +35,13 @@ sealed class Input(
      * Handles only sliding panel
      */
     class OnlySlidingPanel(
-        val slidingPanel: Pair<MultiListenerBottomSheetBehavior<*>, InitialHeight>,
+        val slidingPanel: View,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null,
         val scrollableSlidingPanel: Boolean
-    ) : Input(toolbarHeight, tabLayoutHeight) {
+    ) : ScrollType(toolbarHeight, tabLayoutHeight) {
         init {
-            require(slidingPanel.second > 0)
+            require(BottomSheetBehavior.from(slidingPanel) is MultiListenerBottomSheetBehavior<*>)
         }
     }
 
@@ -52,7 +52,7 @@ sealed class Input(
         val bottomNavigation: Pair<View, InitialHeight>,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null
-    ) : Input(toolbarHeight, tabLayoutHeight) {
+    ) : ScrollType(toolbarHeight, tabLayoutHeight) {
         init {
             require(bottomNavigation.second > 0)
         }
@@ -64,5 +64,5 @@ sealed class Input(
     class None(
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null
-    ) : Input(toolbarHeight, tabLayoutHeight)
+    ) : ScrollType(toolbarHeight, tabLayoutHeight)
 }

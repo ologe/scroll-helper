@@ -10,11 +10,11 @@ import androidx.core.math.MathUtils.clamp
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.scrollhelper.Input
+import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.ViewPagerListener
 
 internal abstract class AbsScroll(
-    private val input: Input,
+    private val input: ScrollType,
     private val enableClipRecursively: Boolean,
     private var debugScroll: Boolean
 ) {

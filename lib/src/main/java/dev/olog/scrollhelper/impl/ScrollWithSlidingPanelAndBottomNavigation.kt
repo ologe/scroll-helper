@@ -3,71 +3,105 @@ package dev.olog.scrollhelper.impl
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.math.MathUtils.clamp
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.scrollhelper.InitialHeight
-import dev.olog.scrollhelper.Input
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.from
+import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
+import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.SlidingPanelListener
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.math.abs
 
 internal class ScrollWithSlidingPanelAndBottomNavigation(
-    input: Input.Full,
+    input: ScrollType.Full,
     enableClipRecursively: Boolean,
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
-    private val slidingPanelHeight: InitialHeight = input.slidingPanel.second
-    private val slidingPanelPlusNavigationHeight: InitialHeight = slidingPanelHeight + input.bottomNavigation.second
+    companion object {
+        private const val TOLERANCE = 0.01
+    }
 
-    private val slidingPanel = input.slidingPanel.first
-    private val bottomNavigation = input.bottomNavigation.first
+    private val slidingPanel = input.slidingPanel
+    private val slidingPanelBehavior = from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
+    private val bottomNavigation = input.bottomNavigation
 
-    private val slidingPanelListener by lazy(LazyThreadSafetyMode.NONE) { SlidingPanelListener(bottomNavigation) }
+    private val slidingPanelListener by lazy(NONE) { SlidingPanelListener(bottomNavigation) }
+
+    init {
+        slidingPanel.doOnPreDraw {
+            // for some reason start with a different translation, so force to 0
+            it.translationY = 0f
+        }
+        bottomNavigation.doOnPreDraw {
+            // to be consistent with sliding panel
+            it.translationY = 0f
+            slidingPanelBehavior.peekHeight = slidingPanelBehavior.peekHeight + it.height
+        }
+    }
 
     override fun onAttach(activity: FragmentActivity) {
-        slidingPanel.addPanelSlideListener(slidingPanelListener)
+        slidingPanelBehavior.addPanelSlideListener(slidingPanelListener)
     }
 
     override fun onDetach(activity: FragmentActivity) {
-        slidingPanel.removePanelSlideListener(slidingPanelListener)
+        slidingPanelBehavior.removePanelSlideListener(slidingPanelListener)
     }
 
     override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onRecyclerViewScrolled(recyclerView, dx, dy)
 
-        val clampedNavigationTranslation =
-            clamp(bottomNavigation.translationY + dy, 0f, bottomNavigation.height.toFloat())
-
-        val clampedSlidingPanelTranslationY = clamp(
-            slidingPanelPlusNavigationHeight - clampedNavigationTranslation.toInt(),
-            slidingPanelHeight,
-            slidingPanelPlusNavigationHeight
+        val clampedNavigationTranslation = clamp(
+            bottomNavigation.translationY + dy,
+            0f,
+            bottomNavigation.height.toFloat()
         )
 
         logVerbose {
             """
                 onRecyclerViewScrolled: 
-                    - translating sliding panel from ${slidingPanel.peekHeight} to $clampedSlidingPanelTranslationY
+                    - translating sliding panel from ${slidingPanel.translationY} to $clampedNavigationTranslation
                     - translating bottom navigation from ${bottomNavigation.translationY} to $clampedNavigationTranslation
             """.trimIndent()
         }
 
-        slidingPanel.peekHeight = clampedSlidingPanelTranslationY
-        bottomNavigation.translationY = clampedNavigationTranslation
+        // translate only if collapsed, avoid collision with sliding panel listener
+        val isSlidingPanelCollapsed = slidingPanelBehavior.state == STATE_COLLAPSED
 
-        fabMap.get(recyclerView.hashCode())?.let { it.translationY = clampedNavigationTranslation }
+        if (abs(slidingPanel.translationY - clampedNavigationTranslation) > TOLERANCE &&
+            isSlidingPanelCollapsed
+        ) {
+            slidingPanel.translationY = clampedNavigationTranslation
+        }
+
+        if (abs(bottomNavigation.translationY - clampedNavigationTranslation) > TOLERANCE &&
+            isSlidingPanelCollapsed
+        ) {
+            bottomNavigation.translationY = clampedNavigationTranslation
+        }
+
+        fabMap.get(recyclerView.hashCode())?.let { fab ->
+            if (abs(fab.translationY - clampedNavigationTranslation) > TOLERANCE &&
+                isSlidingPanelCollapsed
+            ) {
+                fab.translationY = clampedNavigationTranslation
+            }
+        }
     }
 
     override fun restoreInitialPosition(recyclerView: RecyclerView) {
         super.restoreInitialPosition(recyclerView)
         bottomNavigation.animate()?.translationY(0f)
-        slidingPanel.peekHeight = slidingPanelPlusNavigationHeight
+        slidingPanel.animate()?.translationY(0f)
     }
 
     override fun applyInsetsToList(list: RecyclerView, toolbar: View?, tabLayout: View?) {
         super.applyInsetsToList(list, toolbar, tabLayout)
 
-        val minimumBottomInset = slidingPanelHeight
+        val minimumBottomInset = slidingPanelBehavior.peekHeight - bottomNavigation.height
 
         val updatePadding = list.paddingBottom < minimumBottomInset
 
@@ -77,11 +111,14 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     }
 
     override fun applyMarginToFab(fab: View) {
-        val params = fab.layoutParams
-        val marginsToApply = slidingPanelPlusNavigationHeight
-        if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
-            params.bottomMargin += marginsToApply
-            fab.layoutParams = params
+        fab.doOnPreDraw {
+            val params = fab.layoutParams
+            val marginsToApply = slidingPanelBehavior.peekHeight
+
+            if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
+                params.bottomMargin += marginsToApply
+                fab.layoutParams = params
+            }
         }
     }
 }

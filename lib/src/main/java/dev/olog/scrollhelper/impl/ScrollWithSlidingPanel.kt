@@ -3,21 +3,29 @@ package dev.olog.scrollhelper.impl
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.math.MathUtils.clamp
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import dev.olog.scrollhelper.InitialHeight
-import dev.olog.scrollhelper.Input
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
+import dev.olog.scrollhelper.ScrollType
+import kotlin.math.abs
 
 internal class ScrollWithSlidingPanel(
-    input: Input.OnlySlidingPanel,
+    input: ScrollType.OnlySlidingPanel,
     enableClipRecursively: Boolean,
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
-    private val scrollSlidingPanel = input.scrollableSlidingPanel
+    companion object {
+        private const val TOLERANCE = 0.01
+    }
 
-    private val slidingPanel = input.slidingPanel.first
-    private val slidingPanelHeight: InitialHeight = input.slidingPanel.second
+    private val scrollSlidingPanel: Boolean = input.scrollableSlidingPanel
+
+    private val slidingPanel: View = input.slidingPanel
+    private val slidingPanelBehavior =
+        BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
 
     override fun onAttach(activity: FragmentActivity) {
     }
@@ -30,8 +38,7 @@ internal class ScrollWithSlidingPanel(
         if (!scrollSlidingPanel) {
             return
         }
-        slidingPanel.peekHeight = slidingPanelHeight
-
+        slidingPanel.animate()?.translationY(0f)
     }
 
     override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -40,29 +47,38 @@ internal class ScrollWithSlidingPanel(
             return
         }
         val newPeekHeight = clamp(
-            slidingPanel.peekHeight - dy,
-            0,
-            slidingPanelHeight
+            slidingPanel.translationY + dy,
+            0f,
+            slidingPanelBehavior.peekHeight.toFloat()
         )
 
-        logVerbose { """
+        logVerbose {
+            """
              onRecyclerViewScrolled: translating sliding panel
-                from=${slidingPanel.peekHeight} to $newPeekHeight
-        """.trimIndent() }
+                from=${slidingPanel.translationY} to $newPeekHeight
+        """.trimIndent()
+        }
 
-        slidingPanel.peekHeight = newPeekHeight
-        fabMap.get(recyclerView.hashCode())?.let {
-            it.translationY = (slidingPanelHeight - newPeekHeight).toFloat()
+        if (abs(slidingPanel.translationY - newPeekHeight) > TOLERANCE &&
+            slidingPanelBehavior.state == BottomSheetBehavior.STATE_COLLAPSED
+        ) {
+            slidingPanel.translationY = newPeekHeight
+
+            fabMap.get(recyclerView.hashCode())?.let {
+                it.translationY = slidingPanel.translationY
+            }
         }
     }
 
     override fun applyMarginToFab(fab: View) {
-        val params = fab.layoutParams
-        val marginsToApply = slidingPanelHeight
+        fab.doOnPreDraw {
+            val params = fab.layoutParams
+            val marginsToApply = slidingPanelBehavior.peekHeight
 
-        if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
-            params.bottomMargin += marginsToApply
-            fab.layoutParams = params
+            if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
+                params.bottomMargin += marginsToApply
+                fab.layoutParams = params
+            }
         }
     }
 }

@@ -12,8 +12,8 @@ android {
         // alpha 0
         // beta 1
         // release 2
-        versionCode 28_0_2_0_4
-        versionName "0.2-alpha04"
+        versionCode 29_1_0_0_0
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

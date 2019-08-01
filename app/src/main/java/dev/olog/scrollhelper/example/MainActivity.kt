@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import dev.olog.scrollhelper.Input
-import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ScrollHelper
+import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.example.listener.MyScrollHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -76,37 +74,34 @@ class MainActivity : AppCompatActivity() {
     private fun setupScrollBehavior() {
         val slidingPanel = findViewById<View>(R.id.slidingPanel)
 
-        val slidingPanelBehavior =
-            if (slidingPanel != null) BottomSheetBehavior.from(slidingPanel) as MultiListenerBottomSheetBehavior<*>?
-            else null
         val bottomNavigation = findViewById<View>(R.id.bottomNavigation)
 
-        val input: Input = when (type) {
+        val input: ScrollType = when (type) {
             Type.FULL -> {
-                Input.Full(
-                    slidingPanelBehavior!! to dimen(R.dimen.sliding_panel),
-                    bottomNavigation to dimen(R.dimen.bottomNavigation),
+                ScrollType.Full(
+                    slidingPanel = slidingPanel,
+                    bottomNavigation = bottomNavigation,
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )
             }
             Type.ONLY_SLIDING_PANEL -> {
-                Input.OnlySlidingPanel(
-                    slidingPanelBehavior!! to dimen(R.dimen.sliding_panel),
+                ScrollType.OnlySlidingPanel(
+                    slidingPanel,
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout),
                     scrollableSlidingPanel = true
                 )
             }
             Type.ONLY_BOTTOM_NAVIGATION -> {
-                Input.OnlyBottomNavigation(
+                ScrollType.OnlyBottomNavigation(
                     bottomNavigation to dimen(R.dimen.bottomNavigation),
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )
             }
             Type.NONE -> {
-                Input.None(
+                ScrollType.None(
                     toolbarHeight = dimen(R.dimen.toolbar),
                     tabLayoutHeight = dimen(R.dimen.tabLayout)
                 )

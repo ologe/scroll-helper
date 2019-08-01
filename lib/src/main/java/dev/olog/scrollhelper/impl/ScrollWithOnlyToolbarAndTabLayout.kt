@@ -2,13 +2,13 @@ package dev.olog.scrollhelper.impl
 
 import android.view.View
 import androidx.fragment.app.FragmentActivity
-import dev.olog.scrollhelper.Input
+import dev.olog.scrollhelper.ScrollType
 
 /**
  * Behavior when sliding panel and bottom navigation are missing
  */
 internal class ScrollWithOnlyToolbarAndTabLayout(
-    input: Input.None,
+    input: ScrollType.None,
     enableClipRecursively: Boolean,
     debugScroll: Boolean
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
