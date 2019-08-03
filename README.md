@@ -12,6 +12,22 @@ the NavigationBar and the FloatingActionButton depending on how you setup the li
     <img src="https://github.com/ologe/scroll-helper/blob/master/gifs/gif3.gif" width="32%">
 </div>
 
+## Getting started
+Step 1. Add the JitPack repository to your build file
+Add it in your root build.gradle at the end of repositories:
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+Step 2. Add the dependency
+```groovy
+implementation 'com.github.ologe:scroll-helper:1.0.1'
+```
+
 ### Usage
 
 - Extend `ScrollHelper` class and override all abstract methods.
