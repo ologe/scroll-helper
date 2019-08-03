@@ -16,15 +16,13 @@ internal class SlidingPanelListener(private val bottomNavigation: View) : Bottom
     private var lastCollapsedSlidingPanelTranslationY = bottomNavigation.translationY
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        if (slideOffset > 0.1){
-            val translationY = MathUtils.clamp(
-                bottomNavigation.height * MathUtils.clamp(slideOffset, 0f, 1f),
-                lastCollapsedBottomNavigationTranslationY,
-                bottomNavigation.height.toFloat()
-            )
-            bottomNavigation.translationY = translationY
-            bottomSheet.translationY = (1 - slideOffset) * lastCollapsedSlidingPanelTranslationY
-        }
+        val translationY = MathUtils.clamp(
+            bottomNavigation.height * MathUtils.clamp(slideOffset, 0f, 1f),
+            lastCollapsedBottomNavigationTranslationY,
+            bottomNavigation.height.toFloat()
+        )
+        bottomNavigation.translationY = translationY
+        bottomSheet.translationY = (1 - slideOffset) * lastCollapsedSlidingPanelTranslationY
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
