@@ -28,8 +28,8 @@ class MyScrollHelper(
     /**
      * Override this to translate your custom views
      */
-    override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        super.onRecyclerViewScrolled(recyclerView, dx, dy)
+    override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, forced: Boolean) {
+        super.onRecyclerViewScrolled(recyclerView, dx, dy, forced)
     }
 
     override fun skipFragment(fragment: Fragment): Boolean {

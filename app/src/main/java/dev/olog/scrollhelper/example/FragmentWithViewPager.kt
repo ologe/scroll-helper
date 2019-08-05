@@ -49,7 +49,7 @@ class FragmentWithViewPager : Fragment(){
 
 class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm){
 
-    private val childCount = listOf(50, 50, 2, 50)
+    private val childCount = listOf(6, 50, 2, 50)
 
     override fun getItem(position: Int): Fragment {
         val fragment = ViewpagerChildFragment()
