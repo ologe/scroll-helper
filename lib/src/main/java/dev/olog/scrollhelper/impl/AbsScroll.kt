@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewParent
 import androidx.annotation.CallSuper
 import androidx.core.math.MathUtils.clamp
+import androidx.core.util.forEach
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -111,7 +112,9 @@ internal abstract class AbsScroll(
     open fun restoreInitialPosition(recyclerView: RecyclerView) {
         tabLayoutMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
         toolbarMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
-        fabMap.get(recyclerView.hashCode())?.animate()?.translationY(0f)
+        fabMap.forEach { _, value ->
+            value.animate().translationY(0f)
+        }
     }
 
     @CallSuper
