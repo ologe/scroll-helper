@@ -35,7 +35,6 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
         bottomNavigation.doOnPreDraw {
             // to be consistent with sliding panel
             it.translationY = 0f
-            slidingPanelBehavior.peekHeight = slidingPanelBehavior.peekHeight + it.height
         }
     }
 
@@ -82,22 +81,22 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     override fun applyInsetsToList(list: RecyclerView, toolbar: View?, tabLayout: View?) {
         super.applyInsetsToList(list, toolbar, tabLayout)
 
-        val minimumBottomInset = slidingPanelBehavior.peekHeight - bottomNavigation.height
+        bottomNavigation.doOnPreDraw {
+            val updatePadding = list.paddingBottom < it.height
 
-        val updatePadding = list.paddingBottom < minimumBottomInset
-
-        if (updatePadding) {
-            list.updatePadding(bottom = list.paddingBottom + minimumBottomInset)
+            if (updatePadding) {
+                list.updatePadding(bottom = list.paddingBottom + it.height)
+            }
         }
     }
 
     override fun applyMarginToFab(fab: View) {
         fab.doOnPreDraw {
-            val params = fab.layoutParams
-            val marginsToApply = slidingPanelBehavior.peekHeight
+            val params = fab.layoutParams as? ViewGroup.MarginLayoutParams ?: return@doOnPreDraw
 
-            if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
-                params.bottomMargin += marginsToApply
+            val neverApplied = params.bottomMargin < slidingPanelBehavior.peekHeight
+            if (neverApplied){
+                params.bottomMargin = params.bottomMargin + slidingPanelBehavior.peekHeight + slidingPanel.translationY.toInt()
                 fab.layoutParams = params
             }
         }

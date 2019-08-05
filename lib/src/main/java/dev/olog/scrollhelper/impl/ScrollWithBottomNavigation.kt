@@ -49,11 +49,11 @@ internal class ScrollWithBottomNavigation(
 
     override fun applyMarginToFab(fab: View) {
         fab.doOnPreDraw {
-            val params = fab.layoutParams
-            val marginsToApply = bottomNavigation.height
+            val params = fab.layoutParams as? ViewGroup.MarginLayoutParams ?: return@doOnPreDraw
 
-            if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
-                params.bottomMargin += marginsToApply
+            val neverApplied = params.bottomMargin < bottomNavigation.height
+            if (neverApplied){
+                params.bottomMargin = params.bottomMargin + bottomNavigation.height
                 fab.layoutParams = params
             }
         }

@@ -64,11 +64,11 @@ internal class ScrollWithSlidingPanel(
 
     override fun applyMarginToFab(fab: View) {
         fab.doOnPreDraw {
-            val params = fab.layoutParams
-            val marginsToApply = slidingPanelBehavior.peekHeight
+            val params = fab.layoutParams as? ViewGroup.MarginLayoutParams ?: return@doOnPreDraw
 
-            if (params is ViewGroup.MarginLayoutParams && params.bottomMargin < marginsToApply) {
-                params.bottomMargin += marginsToApply
+            val neverApplied = params.bottomMargin < slidingPanelBehavior.peekHeight
+            if (neverApplied){
+                params.bottomMargin = params.bottomMargin + slidingPanelBehavior.peekHeight + slidingPanel.translationY.toInt()
                 fab.layoutParams = params
             }
         }
