@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<!--    bottom sheet height + botttom navigation-->
+    <dimen name="sliding_panel_plus_bottom_navigation">110dp</dimen>
     <dimen name="sliding_panel">60dp</dimen>
+
     <dimen name="toolbar">56dp</dimen>
     <dimen name="tabLayout">50dp</dimen>
     <dimen name="bottomNavigation">50dp</dimen>
