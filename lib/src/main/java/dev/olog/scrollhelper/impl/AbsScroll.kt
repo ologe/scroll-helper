@@ -38,7 +38,7 @@ internal abstract class AbsScroll(
     }
 
     @CallSuper
-    open fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, forced: Boolean) {
+    open fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, overScroll: Boolean) {
         logVerbose { "onRecyclerViewScrolled $recyclerView\ndy=$dy" }
 
         var clampedTabLayoutTranslation = 0f

@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_child.view.*
+import dev.olog.scrollhelper.layoutmanagers.OverScrollGridLayoutManager
+import kotlinx.android.synthetic.main.fragment_second.*
 
 class SecondFragment : Fragment(){
 
@@ -19,8 +19,8 @@ class SecondFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.list.adapter = Adapter(100)
-        view.list.layoutManager = GridLayoutManager(view.context, 2)
+        list.adapter = Adapter(100)
+        list.layoutManager = OverScrollGridLayoutManager(list, 2)
     }
 
 }

@@ -1,7 +1,6 @@
 package dev.olog.scrollhelper
 
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -9,6 +8,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.impl.*
+import dev.olog.scrollhelper.layoutmanagers.*
+import java.lang.Exception
 
 abstract class ScrollHelper(
     private val activity: FragmentActivity,
@@ -90,40 +91,13 @@ abstract class ScrollHelper(
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            onRecyclerViewScrolled(recyclerView, dx, dy, false)
+            onRecyclerViewScrolled(recyclerView, dx, dy)
         }
     }
 
-    private val overScrollListener = object : View.OnTouchListener {
-
-        private var downY: Float = -1f
-        private var deltaY: Float = Float.NEGATIVE_INFINITY
-
-        private var list: RecyclerView? = null
-
-        override fun onTouch(v: View, event: MotionEvent): Boolean {
-            when (event.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    downY = event.y
-                    list = v as RecyclerView
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if (deltaY == Float.NEGATIVE_INFINITY){
-                        downY = event.y
-                    }
-                    deltaY = event.y - downY
-                    if (!list!!.canScrollVertically(-1) && !list!!.canScrollVertically(1)){
-                        onRecyclerViewScrolled(list!!, 0, -deltaY.toInt() / 2, true)
-                    }
-                }
-                MotionEvent.ACTION_UP,
-                MotionEvent.ACTION_CANCEL -> {
-                    deltaY = Float.NEGATIVE_INFINITY
-                    downY = -1f
-                    list = null
-                }
-            }
-            return false
+    private val onOverScrollListener = object : OnOverScrollListener {
+        override fun onRecyclerViewOverScroll(recyclerView: RecyclerView, dy: Int) {
+            onRecyclerViewOverScrolled(recyclerView, dy)
         }
     }
 
@@ -148,9 +122,10 @@ abstract class ScrollHelper(
             logVerbose { "search recycler view" }
             searchForRecyclerView(fragment)?.let { recyclerView ->
                 logVerbose { "recycler view found" }
+                requireOverScrollLayoutManager(recyclerView)
                 // recycler view found, add scroll listener
                 recyclerView.addOnScrollListener(onScrollListener)
-                recyclerView.setOnTouchListener(overScrollListener)
+                getOverScrollDelegate(recyclerView).addOnOverScrollListener(onOverScrollListener)
 
                 logVerbose { "search toolbar" }
                 // map recycler view to toolbar
@@ -182,6 +157,28 @@ abstract class ScrollHelper(
             logVerbose { "****" }
         }
 
+        private fun requireOverScrollLayoutManager(recyclerView: RecyclerView) {
+            val layoutManager = recyclerView.layoutManager
+            require(
+                layoutManager is OverScrollLinearLayoutManager ||
+                        layoutManager is OverScrollGridLayoutManager ||
+                        layoutManager is OverScrollStaggeredLayoutManager
+            ) {
+                "layout manager must be one of ${OverScrollLinearLayoutManager::class.java.name}, " +
+                        "${OverScrollGridLayoutManager::class.java.name}, " +
+                        OverScrollStaggeredLayoutManager::class.java.name
+            }
+        }
+
+        private fun getOverScrollDelegate(recyclerView: RecyclerView): OverScrollDelegate{
+            return when (val layoutManager = recyclerView.layoutManager){
+                is OverScrollLinearLayoutManager -> layoutManager
+                is OverScrollGridLayoutManager -> layoutManager
+                is OverScrollStaggeredLayoutManager -> layoutManager
+                else -> throw Exception("shouldn't happen")
+            }
+        }
+
         override fun onFragmentPaused(fm: FragmentManager, fragment: Fragment) {
             logVerbose { "onFragmentPaused=${fragment.tag}" }
             if (skipFragment(fragment)) {
@@ -202,7 +199,7 @@ abstract class ScrollHelper(
                 logVerbose { "recycler view found" }
                 // recycler view found, detach listener and clean
                 recyclerView.removeOnScrollListener(onScrollListener)
-                recyclerView.setOnTouchListener(null)
+                getOverScrollDelegate(recyclerView).removeOnOverScrollListener(onOverScrollListener)
                 impl.fabMap.remove(recyclerView.hashCode())
                 impl.toolbarMap.remove(recyclerView.hashCode())
                 impl.tabLayoutMap.remove(recyclerView.hashCode())
@@ -216,8 +213,12 @@ abstract class ScrollHelper(
      * When scrolling up, scrolls up toolbar and tablayout, and scrolls down bottom navigation and sliding panel
      * When scrolling down, restores all the view to their initial position
      */
-    protected open fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, forced: Boolean) {
-        impl.onRecyclerViewScrolled(recyclerView, dx, dy, forced)
+    protected open fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        impl.onRecyclerViewScrolled(recyclerView, dx, dy, overScroll = false)
+    }
+
+    protected open fun onRecyclerViewOverScrolled(recyclerView: RecyclerView, dy: Int) {
+        impl.onRecyclerViewScrolled(recyclerView, 0, dy, overScroll = true)
     }
 
     /**

@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_child.view.*
+import dev.olog.scrollhelper.layoutmanagers.OverScrollGridLayoutManager
+import kotlinx.android.synthetic.main.fragment_child.*
 
 class ViewpagerChildFragment : Fragment() {
 
@@ -16,8 +15,8 @@ class ViewpagerChildFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.list.adapter = Adapter(arguments!!.getInt("child_count"))
-        view.list.layoutManager = GridLayoutManager(view.context, 2)
+        list.adapter = Adapter(arguments!!.getInt("child_count"))
+        list.layoutManager = OverScrollGridLayoutManager(list, 2)
     }
 
 }

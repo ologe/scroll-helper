@@ -46,9 +46,9 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
         slidingPanelBehavior.removePanelSlideListener(slidingPanelListener)
     }
 
-    override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, forced: Boolean) {
-        if (!forced){
-            super.onRecyclerViewScrolled(recyclerView, dx, dy, forced)
+    override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, overScroll: Boolean) {
+        if (!overScroll) {
+            super.onRecyclerViewScrolled(recyclerView, dx, dy, overScroll)
         }
 
         val clampedNavigationTranslation = clamp(
