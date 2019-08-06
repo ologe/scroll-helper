@@ -122,7 +122,7 @@ abstract class ScrollHelper(
             logVerbose { "search recycler view" }
             searchForRecyclerView(fragment)?.let { recyclerView ->
                 logVerbose { "recycler view found" }
-                requireOverScrollLayoutManager(recyclerView)
+                requireOverScrollLayoutManager(fragment.tag, recyclerView)
                 // recycler view found, add scroll listener
                 recyclerView.addOnScrollListener(onScrollListener)
                 getOverScrollDelegate(recyclerView).addOnOverScrollListener(onOverScrollListener)
@@ -157,14 +157,15 @@ abstract class ScrollHelper(
             logVerbose { "****" }
         }
 
-        private fun requireOverScrollLayoutManager(recyclerView: RecyclerView) {
+        private fun requireOverScrollLayoutManager(tag: String?, recyclerView: RecyclerView) {
             val layoutManager = recyclerView.layoutManager
             require(
                 layoutManager is OverScrollLinearLayoutManager ||
                         layoutManager is OverScrollGridLayoutManager ||
                         layoutManager is OverScrollStaggeredGridLayoutManager
             ) {
-                "layout manager must be one of ${OverScrollLinearLayoutManager::class.java.name}, " +
+                "recycler view in fragment with tag=$tag must have one of the following layouts manager " +
+                        "${OverScrollLinearLayoutManager::class.java.name}, " +
                         "${OverScrollGridLayoutManager::class.java.name}, " +
                         OverScrollStaggeredGridLayoutManager::class.java.name
             }
