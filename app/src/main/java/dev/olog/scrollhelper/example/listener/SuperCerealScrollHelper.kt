@@ -12,7 +12,7 @@ import dev.olog.scrollhelper.example.FragmentWithViewPager
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 
-class MyScrollHelper(
+class SuperCerealScrollHelper(
     activity: FragmentActivity,
     input: ScrollType,
     enableClipRecursively: Boolean = true

@@ -5,6 +5,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.impl.*
@@ -17,7 +20,7 @@ abstract class ScrollHelper(
     enableClipRecursively: Boolean,
     private val debug: Boolean,
     debugScroll: Boolean
-) {
+) : LifecycleObserver {
 
     companion object {
         private const val TAG = "ScrollHelper"
@@ -48,7 +51,7 @@ abstract class ScrollHelper(
 
     }
 
-    private inline fun logVerbose(msg: () -> String) {
+    private inline fun logVerbose(crossinline msg: () -> String) {
         if (debug) {
             Log.v(TAG, msg())
         }
@@ -57,6 +60,7 @@ abstract class ScrollHelper(
     /**
      * Attach listeners
      */
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     open fun onAttach() {
         logVerbose { "onAttach" }
 
@@ -70,6 +74,7 @@ abstract class ScrollHelper(
     /**
      * Detach listeners
      */
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     open fun onDetach() {
         logVerbose { "onDetach" }
 
@@ -82,6 +87,7 @@ abstract class ScrollHelper(
     /**
      * Clear resources
      */
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     open fun dispose() {
         logVerbose { "dispose" }
 

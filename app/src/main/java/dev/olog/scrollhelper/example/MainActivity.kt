@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.ScrollType
-import dev.olog.scrollhelper.example.listener.MyScrollHelper
+import dev.olog.scrollhelper.example.listener.SuperCerealScrollHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -56,21 +56,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        onScrollBehavior.onAttach()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        onScrollBehavior.onDetach()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        onScrollBehavior.dispose()
-    }
-
     private fun setupScrollBehavior() {
         val slidingPanel = findViewById<View>(R.id.slidingPanel)
 
@@ -109,7 +94,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        onScrollBehavior = MyScrollHelper(this, scrollType)
+        onScrollBehavior = SuperCerealScrollHelper(this, scrollType)
+        lifecycle.addObserver(onScrollBehavior)
     }
 
     private fun setupBottomNavigation() {

@@ -32,11 +32,11 @@ implementation 'com.github.ologe:scroll-helper:1.1.0'
 
 - Extend `ScrollHelper` class and override all abstract methods.
 
-Then instantiate the class in `onCreate` or your activity, and then call `onAttach`, `onDetach` and `dispose`:
+Then instantiate the class in `onCreate` or your activity
 ```kotlin
 class MyActivity : AppCompatActivity(){
     
-    private lateinit var myScrollerHelper: MyScrollHelper
+    private lateinit var scrollHelper: SuperCerialScrollHelper
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,26 +49,12 @@ class MyActivity : AppCompatActivity(){
              realSlidingPanelPeek = dimen(R.dimen.sliding_panel)
          )
         
-        myScrollerHelper = MyScrollHelper(
+        scrollHelper = SuperCerialScrollHelper(
             activity = this, 
             scrollType = scrollType, 
             enableClipRecursively = true
         )
-    }
-    
-    override fun onResume() {
-        super.onResume()
-        myScrollerHelper.onAttach()
-    }
-    
-    override fun onPause() {
-        super.onPause()
-        myScrollerHelper.onDetach()
-    }
-    
-    override fun onDestroy() {
-        super.onDestroy()
-        myScrollerHelper.dispose()
+        lifecycle.addObserver(superCerialScrollHelper) // register to lifecycle updates, or call manually onAttach, onDetach and dispose
     }
     
 }
