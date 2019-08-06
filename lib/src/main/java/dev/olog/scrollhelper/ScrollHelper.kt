@@ -162,11 +162,11 @@ abstract class ScrollHelper(
             require(
                 layoutManager is OverScrollLinearLayoutManager ||
                         layoutManager is OverScrollGridLayoutManager ||
-                        layoutManager is OverScrollStaggeredLayoutManager
+                        layoutManager is OverScrollStaggeredGridLayoutManager
             ) {
                 "layout manager must be one of ${OverScrollLinearLayoutManager::class.java.name}, " +
                         "${OverScrollGridLayoutManager::class.java.name}, " +
-                        OverScrollStaggeredLayoutManager::class.java.name
+                        OverScrollStaggeredGridLayoutManager::class.java.name
             }
         }
 
@@ -174,7 +174,7 @@ abstract class ScrollHelper(
             return when (val layoutManager = recyclerView.layoutManager){
                 is OverScrollLinearLayoutManager -> layoutManager
                 is OverScrollGridLayoutManager -> layoutManager
-                is OverScrollStaggeredLayoutManager -> layoutManager
+                is OverScrollStaggeredGridLayoutManager -> layoutManager
                 else -> throw Exception("shouldn't happen")
             }
         }

@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigation = findViewById<View>(R.id.bottomNavigation)
 
-        val input: ScrollType = when (type) {
+        val scrollType: ScrollType = when (type) {
             Type.FULL -> {
                 ScrollType.Full(
                     slidingPanel = slidingPanel,
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        onScrollBehavior = MyScrollHelper(this, input, true)
+        onScrollBehavior = MyScrollHelper(this, scrollType)
     }
 
     private fun setupBottomNavigation() {

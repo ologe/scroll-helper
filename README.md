@@ -25,7 +25,7 @@ allprojects {
 ```
 Step 2. Add the dependency
 ```groovy
-implementation 'com.github.ologe:scroll-helper:1.0.2'
+implementation 'com.github.ologe:scroll-helper:1.1.0'
 ```
 
 ### Usage
@@ -41,11 +41,18 @@ class MyActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        val scrollType = ScrollType.Full(
+             slidingPanel = slidingPanel,
+             bottomNavigation = bottomNavigation,
+             toolbarHeight = dimen(R.dimen.toolbar),
+             tabLayoutHeight = dimen(R.dimen.tabLayout),
+             realSlidingPanelPeek = dimen(R.dimen.sliding_panel)
+         )
+        
         myScrollerHelper = MyScrollHelper(
-            slidingPanel = slidingPanel,
-            bottomNavigation = bottomNavigation,
-            toolbarHeight = dimen(R.dimen.toolbar),
-            tabLayoutHeight = dimen(R.dimen.tabLayout)
+            activity = this, 
+            scrollType = scrollType, 
+            enableClipRecursively = true
         )
     }
     
@@ -105,6 +112,12 @@ Your **activity.xml** should be similar to this:
 ### Caveats, Additional Features and Customization
 - All the needed insets of RecyclerView and FAB will be applied automatically to avoid overlapping with 
 the moving views.
+- Every recycler view that want to support scroll helper has to use one of following layout managers or subclass, 
+    this is because the library has to know when recycler view is overscrolling, otherwise a runtime
+    exception will be thrown:
+    - `dev.olog.scrollhelper.layoutmanagers.OverScrollLinearLayoutManager`
+    - `dev.olog.scrollhelper.layoutmanagers.OverScrollGridLayoutManager`
+    - `dev.olog.scrollhelper.layoutmanagers.OverScrollStaggeredGridLayoutManager`
 - The library provides 4 behaviors (see the sample app):
     - Full scroll (toolbar, tab layout, BottomSheet and bottom navigation)
     - BottomSheet only (toolbar, tab layout and BottomSheet)

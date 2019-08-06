@@ -15,7 +15,7 @@ import dev.olog.scrollhelper.example.findViewByIdNotRecursive
 class MyScrollHelper(
     activity: FragmentActivity,
     input: ScrollType,
-    enableClipRecursively: Boolean
+    enableClipRecursively: Boolean = true
 ) : ScrollHelper(activity, input, enableClipRecursively, true, true) {
 
     /**

@@ -3,7 +3,7 @@ package dev.olog.scrollhelper.layoutmanagers
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-open class OverScrollStaggeredLayoutManager(
+open class OverScrollStaggeredGridLayoutManager(
     private val recyclerView: RecyclerView,
     spanCount: Int,
     orientation: Int
