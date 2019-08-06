@@ -22,6 +22,7 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
 ) : AbsScroll(input, enableClipRecursively, debugScroll) {
 
     private val slidingPanel = input.slidingPanel
+    private val slidingPanelRealPeek = input.realSlidingPanelPeek
     private val slidingPanelBehavior = from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
     private val bottomNavigation = input.bottomNavigation
 
@@ -83,12 +84,10 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     override fun applyInsetsToList(list: RecyclerView, toolbar: View?, tabLayout: View?) {
         super.applyInsetsToList(list, toolbar, tabLayout)
 
-        bottomNavigation.doOnPreDraw {
-            val updatePadding = list.paddingBottom < it.height
+        val updatePadding = list.paddingBottom < slidingPanelRealPeek
 
-            if (updatePadding) {
-                list.updatePadding(bottom = list.paddingBottom + it.height)
-            }
+        if (updatePadding) {
+            list.updatePadding(bottom = list.paddingBottom + slidingPanelRealPeek)
         }
     }
 

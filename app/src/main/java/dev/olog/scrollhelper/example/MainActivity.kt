@@ -82,7 +82,8 @@ class MainActivity : AppCompatActivity() {
                     slidingPanel = slidingPanel,
                     bottomNavigation = bottomNavigation,
                     toolbarHeight = dimen(R.dimen.toolbar),
-                    tabLayoutHeight = dimen(R.dimen.tabLayout)
+                    tabLayoutHeight = dimen(R.dimen.tabLayout),
+                    realSlidingPanelPeek = dimen(R.dimen.sliding_panel)
                 )
             }
             Type.ONLY_SLIDING_PANEL -> {

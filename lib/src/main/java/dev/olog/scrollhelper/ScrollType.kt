@@ -21,12 +21,14 @@ sealed class ScrollType(
     class Full(
         val slidingPanel: View,
         val bottomNavigation: View,
+        val realSlidingPanelPeek: InitialHeight,
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null
     ) : ScrollType(toolbarHeight, tabLayoutHeight) {
 
         init {
             require(BottomSheetBehavior.from(slidingPanel) is MultiListenerBottomSheetBehavior<*>)
+            require(realSlidingPanelPeek > 0)
         }
 
     }
