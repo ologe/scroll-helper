@@ -60,7 +60,7 @@ abstract class ScrollHelper(
     /**
      * Attach listeners
      */
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     open fun onAttach() {
         logVerbose { "onAttach" }
 
@@ -74,7 +74,7 @@ abstract class ScrollHelper(
     /**
      * Detach listeners
      */
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     open fun onDetach() {
         logVerbose { "onDetach" }
 
