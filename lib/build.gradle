@@ -13,8 +13,8 @@ android {
         // alpha 0
         // beta 1
         // release 2
-        versionCode 29_1_1_4_0
-        versionName "1.1.4"
+        versionCode 29_1_1_5_0
+        versionName "1.1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -31,7 +31,7 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.core:core-ktx:1.1.0'
 
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation "com.google.android.material:material:1.0.0"
