@@ -25,7 +25,7 @@ allprojects {
 ```
 Step 2. Add the dependency
 ```groovy
-implementation 'com.github.ologe:scroll-helper:1.1.0'
+implementation 'com.github.ologe:scroll-helper:1.1.5'
 ```
 
 ### Usage
@@ -54,7 +54,9 @@ class MyActivity : AppCompatActivity(){
             scrollType = scrollType, 
             enableClipRecursively = true
         )
-        lifecycle.addObserver(superCerialScrollHelper) // register to lifecycle updates, or call manually onAttach, onDetach and dispose
+        
+        // register to lifecycle updates, or call manually onAttach, onDetach and dispose
+        lifecycle.addObserver(scrollHelper) 
     }
     
 }
