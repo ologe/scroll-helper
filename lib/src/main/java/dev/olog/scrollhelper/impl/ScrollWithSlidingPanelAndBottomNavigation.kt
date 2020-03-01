@@ -7,9 +7,9 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.from
-import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
 import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.SlidingPanelListener
 import kotlin.LazyThreadSafetyMode.NONE
@@ -23,7 +23,7 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
 
     private val slidingPanel = input.slidingPanel
     private val slidingPanelRealPeek = input.realSlidingPanelPeek
-    private val slidingPanelBehavior = from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
+    private val slidingPanelBehavior = from(slidingPanel) as BottomSheetBehavior<*>
     private val bottomNavigation = input.bottomNavigation
 
     private val slidingPanelListener by lazy(NONE) { SlidingPanelListener(bottomNavigation) }
@@ -40,11 +40,11 @@ internal class ScrollWithSlidingPanelAndBottomNavigation(
     }
 
     override fun onAttach(activity: FragmentActivity) {
-        slidingPanelBehavior.addPanelSlideListener(slidingPanelListener)
+        slidingPanelBehavior.addBottomSheetCallback(slidingPanelListener)
     }
 
     override fun onDetach(activity: FragmentActivity) {
-        slidingPanelBehavior.removePanelSlideListener(slidingPanelListener)
+        slidingPanelBehavior.removeBottomSheetCallback(slidingPanelListener)
     }
 
     override fun onRecyclerViewScrolled(recyclerView: RecyclerView, dx: Int, dy: Int, overScroll: Boolean) {

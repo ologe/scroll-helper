@@ -7,8 +7,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
-import dev.olog.scrollhelper.MultiListenerBottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.from
 import dev.olog.scrollhelper.ScrollType
 import kotlin.math.abs
 
@@ -21,8 +21,7 @@ internal class ScrollWithSlidingPanel(
     private val scrollSlidingPanel: Boolean = input.scrollableSlidingPanel
 
     private val slidingPanel: View = input.slidingPanel
-    private val slidingPanelBehavior =
-        from(slidingPanel) as MultiListenerBottomSheetBehavior<*>
+    private val slidingPanelBehavior = from(slidingPanel) as BottomSheetBehavior<*>
 
     override fun onAttach(activity: FragmentActivity) {
     }

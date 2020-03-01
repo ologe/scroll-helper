@@ -27,7 +27,6 @@ sealed class ScrollType(
     ) : ScrollType(toolbarHeight, tabLayoutHeight) {
 
         init {
-            require(BottomSheetBehavior.from(slidingPanel) is MultiListenerBottomSheetBehavior<*>)
             require(realSlidingPanelPeek > 0)
         }
 
@@ -41,11 +40,7 @@ sealed class ScrollType(
         toolbarHeight: InitialHeight,
         tabLayoutHeight: InitialHeight? = null,
         val scrollableSlidingPanel: Boolean
-    ) : ScrollType(toolbarHeight, tabLayoutHeight) {
-        init {
-            require(BottomSheetBehavior.from(slidingPanel) is MultiListenerBottomSheetBehavior<*>)
-        }
-    }
+    ) : ScrollType(toolbarHeight, tabLayoutHeight)
 
     /**
      * Handles only bottom navigation

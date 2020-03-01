@@ -21,8 +21,7 @@
             android:elevation="2dp"
             android:focusable="true"
             app:behavior_hideable="false"
-            app:behavior_peekHeight="@dimen/sliding_panel_plus_bottom_navigation"
-            app:layout_behavior="dev.olog.scrollhelper.MultiListenerBottomSheetBehavior">
+            app:behavior_peekHeight="@dimen/sliding_panel_plus_bottom_navigation">
 
         <ImageView
                 android:id="@+id/cover"
