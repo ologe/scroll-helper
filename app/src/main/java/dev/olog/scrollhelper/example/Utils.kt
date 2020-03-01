@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
+
 package dev.olog.scrollhelper.example
 
 import android.content.Context
