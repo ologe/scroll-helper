@@ -21,6 +21,7 @@
             android:elevation="2dp"
             android:focusable="true"
             app:behavior_hideable="false"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:behavior_peekHeight="@dimen/sliding_panel_plus_bottom_navigation">
 
         <ImageView

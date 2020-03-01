@@ -64,8 +64,7 @@ class MyActivity : AppCompatActivity(){
 
 Your **activity.xml** should be similar to this:
 - CoordinatorLayout has to be the root view to enable BottomSheet.
-- The sliding panel must have app:layout_behavior="dev.olog.scrollhelper.MultiListenerBottomSheetBehavior" 
-    that enables multiple bottom sheet callbacks
+- The sliding panel must have app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout 
@@ -82,7 +81,7 @@ Your **activity.xml** should be similar to this:
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:behavior_peekHeight="@dimen/sliding_panel"
-            app:layout_behavior="dev.olog.scrollhelper.MultiListenerBottomSheetBehavior">
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 <!--       bottom sheet content-->
 
