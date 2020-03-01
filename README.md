@@ -55,7 +55,7 @@ class MyActivity : AppCompatActivity(){
             enableClipRecursively = true
         )
         
-        // register to lifecycle updates, or call manually onAttach, onDetach and dispose
+        // register to lifecycle updates, or call manually onStart, onStop and onDestroy on `scrollHelper`
         lifecycle.addObserver(scrollHelper) 
     }
     

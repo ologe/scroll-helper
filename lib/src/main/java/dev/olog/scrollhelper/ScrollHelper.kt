@@ -2,12 +2,11 @@ package dev.olog.scrollhelper
 
 import android.util.Log
 import android.view.View
+import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import dev.olog.scrollhelper.impl.*
@@ -20,7 +19,7 @@ abstract class ScrollHelper(
     enableClipRecursively: Boolean,
     private val debug: Boolean,
     debugScroll: Boolean
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
 
     companion object {
         private const val TAG = "ScrollHelper"
@@ -60,8 +59,8 @@ abstract class ScrollHelper(
     /**
      * Attach listeners
      */
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    open fun onAttach() {
+    @CallSuper
+    override fun onStart(owner: LifecycleOwner) {
         logVerbose { "onAttach" }
 
         impl.onAttach(activity)
@@ -74,8 +73,8 @@ abstract class ScrollHelper(
     /**
      * Detach listeners
      */
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    open fun onDetach() {
+    @CallSuper
+    override fun onStop(owner: LifecycleOwner) {
         logVerbose { "onDetach" }
 
         impl.onDetach(activity)
@@ -87,8 +86,8 @@ abstract class ScrollHelper(
     /**
      * Clear resources
      */
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    open fun dispose() {
+    @CallSuper
+    override fun onDestroy(owner: LifecycleOwner) {
         logVerbose { "dispose" }
 
         impl.dispose()
