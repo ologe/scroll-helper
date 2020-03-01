@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.ScrollHelper
+import dev.olog.scrollhelper.ScrollType
 import dev.olog.scrollhelper.example.BuildConfig
 import dev.olog.scrollhelper.example.FragmentWithViewPager
 import dev.olog.scrollhelper.example.R
