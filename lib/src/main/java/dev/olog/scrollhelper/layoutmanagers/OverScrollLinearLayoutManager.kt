@@ -1,16 +1,28 @@
 package dev.olog.scrollhelper.layoutmanagers
 
+import android.content.Context
+import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-open class OverScrollLinearLayoutManager(
-    private val recyclerView: RecyclerView,
-    orientation: Int = RecyclerView.VERTICAL,
-    reverseLayout: Boolean = false
-) : LinearLayoutManager(recyclerView.context, orientation, reverseLayout),
-    OverScrollDelegate {
+open class OverScrollLinearLayoutManager : LinearLayoutManager, OverScrollDelegate {
 
-    private val overScrollListeners = mutableListOf<OnOverScrollListener>()
+    constructor(context: Context?) : super(context)
+    constructor(context: Context?, orientation: Int, reverseLayout: Boolean) : super(
+        context,
+        orientation,
+        reverseLayout
+    )
+
+    constructor(
+        context: Context?,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes)
+
+    private val listeners = mutableSetOf<OnOverScrollListener>()
+    private var recyclerView: RecyclerView? = null
 
     override fun scrollVerticallyBy(
         dy: Int,
@@ -18,21 +30,32 @@ open class OverScrollLinearLayoutManager(
         state: RecyclerView.State?
     ): Int {
         val scrollRange = super.scrollVerticallyBy(dy, recycler, state)
-        val overscroll = dy - scrollRange
-        if (overscroll > 0) {
-            overScrollListeners.forEach { it.onRecyclerViewOverScroll(recyclerView, overscroll) }
-        } else if (overscroll < 0) {
-            overScrollListeners.forEach { it.onRecyclerViewOverScroll(recyclerView, overscroll) }
+
+        val recyclerView = this.recyclerView
+        if (recyclerView != null) {
+            val overScroll = dy - scrollRange
+            if (overScroll != 0) {
+                listeners.forEach { it.onRecyclerViewOverScroll(recyclerView, overScroll) }
+            }
         }
         return scrollRange
     }
 
+    override fun onAttachedToWindow(view: RecyclerView?) {
+        super.onAttachedToWindow(view)
+        this.recyclerView = view
+    }
+
+    override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler?) {
+        super.onDetachedFromWindow(view, recycler)
+        this.recyclerView = null
+    }
+
     override fun addOnOverScrollListener(listener: OnOverScrollListener) {
-        overScrollListeners.add(listener)
+        listeners.add(listener)
     }
 
     override fun removeOnOverScrollListener(listener: OnOverScrollListener) {
-        overScrollListeners.remove(listener)
+        listeners.remove(listener)
     }
-
 }

@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 android {
 
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '29.0.3'
 
     defaultConfig {
         minSdkVersion 16
@@ -13,8 +13,8 @@ android {
         // alpha 0
         // beta 1
         // release 2
-        versionCode 29_1_2_2_00
-        versionName "1.2.0"
+        versionCode 29_2_0_1_00
+        versionName "2.0.0-alpha01"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -42,8 +42,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'
 
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "com.google.android.material:material:1.1.0"
+    implementation "androidx.fragment:fragment-ktx:1.2.4"
 
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
