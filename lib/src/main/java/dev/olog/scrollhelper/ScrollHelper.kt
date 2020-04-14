@@ -111,10 +111,7 @@ abstract class ScrollHelper(
         val secondBaseline = findSecondBaseline()
 
         if (recyclerView != null) {
-            recyclerView.updatePadding(
-                top = recyclerView.paddingTop + secondCap,
-                bottom = recyclerView.paddingBottom + firstBaseline
-            )
+            updateRecyclerViewPadding(fragment, recyclerView, secondCap, firstBaseline)
 
             val hashCode: Hash = recyclerView.hashCode()
 
@@ -125,7 +122,7 @@ abstract class ScrollHelper(
             }
 
             if (fab != null) {
-                fab.updateMargin(bottom = fab.marginBottom + secondBaseline)
+                updateFabMargin(fragment, fab, secondBaseline)
                 stateResetter.restore(fragment, fab, FAB_STATE)
                 fabMap[hashCode] = fab
             }
@@ -223,6 +220,26 @@ abstract class ScrollHelper(
     abstract fun findFab(fragment: Fragment): View?
 
     abstract fun findViewPager(fragment: Fragment): ViewPager2?
+
+    protected open fun updateRecyclerViewPadding(
+        fragment: Fragment,
+        recyclerView: RecyclerView,
+        topPadding: Int,
+        bottomPadding: Int
+    ) {
+        recyclerView.updatePadding(
+            top = recyclerView.paddingTop + topPadding,
+            bottom = recyclerView.paddingBottom + bottomPadding
+        )
+    }
+
+    protected open fun updateFabMargin(
+        fragment: Fragment,
+        fab: View,
+        bottomPadding: Int
+    ) {
+        fab.updateMargin(bottom = fab.marginBottom + bottomPadding)
+    }
 
     internal fun findFirstCap(tabLayout: View?, toolbar: View?): Int {
         val tabLayoutHeight = tabLayout?.height ?: 0
