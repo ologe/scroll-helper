@@ -1,4 +1,4 @@
-package dev.olog.scrollhelper.example.tab
+package dev.olog.scrollhelper.example.second.item
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,23 +6,25 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.detail.DetailFragment
 import dev.olog.scrollhelper.example.model.Model
 import dev.olog.scrollhelper.example.model.times
-import kotlinx.android.synthetic.main.fragment_tab.*
+import dev.olog.scrollhelper.example.tab.TabFragmentAdapter
+import kotlinx.android.synthetic.main.fragment_second_item.*
 
-class TabFragment : Fragment(R.layout.fragment_tab) {
+class SecondItemFragment : Fragment(R.layout.fragment_second_item) {
 
     companion object {
 
+        const val TAG = "dev.olog.second.fragment"
+
         private const val POSITION = "dev.olog.position"
 
-        fun newInstance(position: Int): TabFragment {
-            return TabFragment().apply {
-                arguments = bundleOf(POSITION to position)
+        fun newInstance(): SecondItemFragment {
+            return SecondItemFragment().apply {
+                arguments = bundleOf(POSITION to 5)
             }
         }
 
