@@ -117,7 +117,6 @@ abstract class ScrollHelper(
             )
 
             val hashCode: Hash = recyclerView.hashCode()
-            println("fragment add ${fragment.tag} $hashCode")
 
             if (!stateResetter.isRestored(fragment)) {
                 recyclerView.scrollToPosition(0)
@@ -172,7 +171,6 @@ abstract class ScrollHelper(
 
         if (recyclerView != null) {
             val hash: Hash = recyclerView.hashCode()
-            println("fragment remove ${fragment.tag} $hash")
             recyclerView.removeOnScrollListener(scrollListener)
             recyclerView.overScrollDelegate.removeOnOverScrollListener(oversScrollListener)
 
