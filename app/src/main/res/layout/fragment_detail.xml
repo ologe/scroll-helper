@@ -15,7 +15,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/list_item"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layoutManager="dev.olog.scrollhelper.layoutmanagers.OverScrollLinearLayoutManager"
             tools:itemCount="1"
             android:padding="8dp"/>
 
