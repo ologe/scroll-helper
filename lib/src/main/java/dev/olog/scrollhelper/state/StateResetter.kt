@@ -50,7 +50,7 @@ internal class StateResetter {
             TOOLBAR_STATE to toolbar?.translationY,
             TAB_LAYOUT_STATE to tablayout?.translationY,
             FAB_STATE to fab?.translationY,
-            RECYCLER_VIEW_STATE to recyclerView.computeVerticalScrollOffset()
+            RECYCLER_VIEW_STATE to recyclerView.computeVerticalScrollOffset() - recyclerView.paddingTop
         )
         // save for back stack changes
         stateBundle[fragment.tag!!] = bundle
