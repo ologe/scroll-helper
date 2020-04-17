@@ -25,7 +25,7 @@ allprojects {
 ```
 Step 2. Add the dependency
 ```groovy
-implementation 'com.github.ologe:scroll-helper:1.1.5'
+implementation 'com.github.ologe:scroll-helper:1.2.0'
 ```
 
 ### Usage
