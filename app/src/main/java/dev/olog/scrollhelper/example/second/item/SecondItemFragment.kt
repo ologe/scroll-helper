@@ -56,7 +56,7 @@ class SecondItemFragment : Fragment(R.layout.fragment_second_item) {
 
     private fun onClick(view: View, model: Model) {
         val fragment = DetailFragment.newInstance(model.image, view.transitionName)
-        fragment.sharedElementEnterTransition = MaterialContainerTransform(requireContext()).apply {
+        fragment.sharedElementEnterTransition = MaterialContainerTransform().apply {
             drawingViewId = R.id.fragmentContainer
             containerColor = Color.WHITE
         }

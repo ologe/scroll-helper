@@ -2,6 +2,7 @@ package dev.olog.scrollhelper.example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.transition.MaterialFadeThrough
 import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.listener.SuperCerealScrollHelper
 import dev.olog.scrollhelper.example.pager.ViewPagerFragment
@@ -23,25 +24,47 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        bottomNavigation.setOnNavigationItemReselectedListener {
-            // TODO has to click 2 times to change item, why??
+        bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.item1 -> toFirstItem()
                 R.id.item2 -> toSecondItem()
             }
+            true
         }
     }
 
 
     private fun toFirstItem() {
+        val current = supportFragmentManager.findFragmentByTag(ViewPagerFragment.TAG)
+            ?: supportFragmentManager.findFragmentByTag(SecondItemFragment.TAG)
+        current?.exitTransition = MaterialFadeThrough.create()
+
+        val newFragment = ViewPagerFragment().apply {
+            enterTransition = MaterialFadeThrough.create()
+        }
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, ViewPagerFragment(), ViewPagerFragment.TAG)
+            .setReorderingAllowed(true)
+            .replace(R.id.fragmentContainer, newFragment, ViewPagerFragment.TAG)
             .commit()
     }
 
     private fun toSecondItem() {
+        val current = supportFragmentManager.findFragmentByTag(ViewPagerFragment.TAG)
+            ?: supportFragmentManager.findFragmentByTag(SecondItemFragment.TAG)
+        current?.exitTransition = MaterialFadeThrough.create()
+
+        val newFragment = SecondItemFragment.newInstance().apply {
+            enterTransition = MaterialFadeThrough.create()
+        }
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, SecondItemFragment.newInstance(), SecondItemFragment.TAG)
+            .setReorderingAllowed(true)
+            .replace(
+                R.id.fragmentContainer,
+                newFragment,
+                SecondItemFragment.TAG
+            )
             .commit()
     }
 
