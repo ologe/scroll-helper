@@ -174,6 +174,8 @@ abstract class ScrollHelper(
             fabMap.remove(hash)
             toolbarMap.remove(hash)
             tabLayoutMap.remove(hash)
+
+            recyclerView.adapter = null
         }
 
         if (viewPager != null) {
@@ -181,6 +183,7 @@ abstract class ScrollHelper(
             if (listener != null) {
                 viewPager.unregisterOnPageChangeCallback(listener)
             }
+            viewPager.adapter = null
         }
     }
 

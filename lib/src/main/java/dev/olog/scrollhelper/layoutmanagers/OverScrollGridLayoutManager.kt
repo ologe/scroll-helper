@@ -48,8 +48,8 @@ open class OverScrollGridLayoutManager : GridLayoutManager, OverScrollDelegate {
     }
 
     override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler?) {
-        super.onDetachedFromWindow(view, recycler)
         this.recyclerView = null
+        super.onDetachedFromWindow(view, recycler)
     }
 
     override fun addOnOverScrollListener(listener: OnOverScrollListener) {
