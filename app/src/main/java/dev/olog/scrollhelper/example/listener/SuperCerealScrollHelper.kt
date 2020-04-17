@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
+import dev.olog.scrollhelper.example.second.item.SecondItemFragment
 
 class SuperCerealScrollHelper(
     private val activity: FragmentActivity,
@@ -36,6 +37,9 @@ class SuperCerealScrollHelper(
     }
 
     override fun findToolbar(fragment: Fragment): View? {
+        if (fragment.tag == SecondItemFragment.TAG) {
+            return null
+        }
         return fragment.requireActivity().findViewById(R.id.toolbar)
     }
 
