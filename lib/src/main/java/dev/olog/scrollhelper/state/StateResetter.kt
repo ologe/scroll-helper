@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 
 // TODO savedStateRegistry don't work as expected
 private val stateBundle = mutableMapOf<String, Bundle>()
 
-internal class StateResetter(
-    private val activity: FragmentActivity
-) {
+internal class StateResetter {
 
     fun isRestored(fragment: Fragment): Boolean {
         return stateBundle[fragment.tag] != null

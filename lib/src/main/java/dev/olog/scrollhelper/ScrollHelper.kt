@@ -14,15 +14,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.scrollhelper.bottom.sheet.BottomSheetListener
 import dev.olog.scrollhelper.extensions.overScrollDelegate
 import dev.olog.scrollhelper.extensions.updateMargin
+import dev.olog.scrollhelper.pager.ViewPagerCallback
+import dev.olog.scrollhelper.recycler.view.RecyclerViewListener
+import dev.olog.scrollhelper.recycler.view.RecyclerViewOverScrollListener
+import dev.olog.scrollhelper.state.StateResetter
 import dev.olog.scrollhelper.state.StateResetter.Companion.BOTTOM_NAVIGATION_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.BOTTOM_SHEET_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.FAB_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.TAB_LAYOUT_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.TOOLBAR_STATE
-import dev.olog.scrollhelper.pager.ViewPagerCallback
-import dev.olog.scrollhelper.recycler.view.RecyclerViewListener
-import dev.olog.scrollhelper.recycler.view.RecyclerViewOverScrollListener
-import dev.olog.scrollhelper.state.StateResetter
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.math.max
 import kotlin.math.min
@@ -40,7 +40,7 @@ abstract class ScrollHelper(
     internal val toolbarMap = mutableMapOf<Hash, View>()
     private val viewPagerCallbackMap = mutableMapOf<Hash, ViewPagerCallback>()
 
-    private val stateResetter = StateResetter(activity)
+    private val stateResetter = StateResetter()
 
     internal val bottomNavigation by lazy(NONE) {
         findBottomNavigation().apply {
