@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="sliding_panel">60dp</dimen>
+    <dimen name="toolbar">56dp</dimen>
+    <dimen name="tab_layout">48dp</dimen>
+    <dimen name="bottom_navigation">56dp</dimen>
+    <dimen name="bottom_sheet">60dp</dimen>
 
 </resources>

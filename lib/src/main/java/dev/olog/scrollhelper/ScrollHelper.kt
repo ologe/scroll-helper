@@ -1,7 +1,6 @@
 package dev.olog.scrollhelper
 
 import android.view.View
-import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
@@ -9,18 +8,19 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dev.olog.scrollhelper.bottom.sheet.BottomSheetListener
 import dev.olog.scrollhelper.extensions.overScrollDelegate
 import dev.olog.scrollhelper.extensions.updateMargin
+import dev.olog.scrollhelper.pager.ViewPager2Callback
 import dev.olog.scrollhelper.pager.ViewPagerCallback
 import dev.olog.scrollhelper.recycler.view.RecyclerViewListener
 import dev.olog.scrollhelper.recycler.view.RecyclerViewOverScrollListener
 import dev.olog.scrollhelper.state.StateResetter
 import dev.olog.scrollhelper.state.StateResetter.Companion.BOTTOM_NAVIGATION_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.BOTTOM_SHEET_STATE
-import dev.olog.scrollhelper.state.StateResetter.Companion.FAB_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.TAB_LAYOUT_STATE
 import dev.olog.scrollhelper.state.StateResetter.Companion.TOOLBAR_STATE
 import kotlin.LazyThreadSafetyMode.NONE
@@ -30,7 +30,12 @@ import kotlin.math.min
 abstract class ScrollHelper(
     private val activity: FragmentActivity,
     internal val fullScrollTop: Boolean,
-    internal val fullScrollBottom: Boolean
+    internal val fullScrollBottom: Boolean,
+    private val toolbarHeight: Int = 0,
+    private val tabLayoutHeight: Int = 0,
+    private val bottomSheetHeight: Int = 0,
+    private val bottomNavigationHeight: Int = 0,
+    restoreState: Boolean = false
 ) : LifecycleCallback {
 
     private val callback = FragmentLifecycleMonitor(this)
@@ -38,9 +43,9 @@ abstract class ScrollHelper(
     internal val fabMap = mutableMapOf<Hash, View>()
     internal val tabLayoutMap = mutableMapOf<Hash, View>()
     internal val toolbarMap = mutableMapOf<Hash, View>()
-    private val viewPagerCallbackMap = mutableMapOf<Hash, ViewPagerCallback>()
+    private val viewPagerCallbackMap = mutableMapOf<Hash, Any>()
 
-    private val stateResetter = StateResetter()
+    private val stateResetter = StateResetter(restoreState)
 
     internal val bottomNavigation by lazy(NONE) {
         findBottomNavigation().apply {
@@ -51,6 +56,7 @@ abstract class ScrollHelper(
         val view = findBottomSheet() ?: return@lazy null
         val behavior = BottomSheetBehavior.from(view)
         BottomSheetData(view, behavior, behavior.peekHeight).apply {
+            this.behavior.peekHeight = bottomNavigationHeight + bottomSheetHeight
             stateResetter.restoreActivity(view, BOTTOM_SHEET_STATE)
         }
     }
@@ -84,18 +90,12 @@ abstract class ScrollHelper(
             tabLayoutMap.clear()
             toolbarMap.clear()
             viewPagerCallbackMap.clear()
-            stateResetter.dispose()
         }
     }
 
     init {
         activity.supportFragmentManager.registerFragmentLifecycleCallbacks(callback, true)
         activity.lifecycle.addObserver(lifecycleListener)
-        activity.findViewById<View>(android.R.id.content).doOnLayout {
-            val bottomSheet = this.bottomSheet ?: return@doOnLayout
-            val bottomNavigation = this.bottomNavigation ?: return@doOnLayout
-            bottomSheet.behavior.peekHeight = bottomSheet.defaultPeek + bottomNavigation.height
-        }
     }
 
     override fun onFragmentViewCreated(fragment: Fragment) {
@@ -115,15 +115,9 @@ abstract class ScrollHelper(
 
             val hashCode: Hash = recyclerView.hashCode()
 
-            if (!stateResetter.isRestored(fragment)) {
-                recyclerView.scrollToPosition(0)
-            } else {
-                stateResetter.restore(fragment, recyclerView)
-            }
-
             if (fab != null) {
                 updateFabMargin(fragment, fab, secondBaseline)
-                stateResetter.restore(fragment, fab, FAB_STATE)
+                stateResetter.restoreFab(bottomSheet, fab)
                 fabMap[hashCode] = fab
             }
 
@@ -141,10 +135,17 @@ abstract class ScrollHelper(
             recyclerView.addOnScrollListener(scrollListener)
             recyclerView.overScrollDelegate.addOnOverScrollListener(oversScrollListener)
         }
-        if (viewPager != null) {
-            val callback = ViewPagerCallback(fragment.childFragmentManager, ::onPageChanged)
-            viewPagerCallbackMap[viewPager.hashCode()] = callback
-            viewPager.registerOnPageChangeCallback(callback)
+        when (viewPager) {
+            is ViewPager -> {
+                val callback = ViewPagerCallback(fragment.childFragmentManager, ::onPageChanged)
+                viewPagerCallbackMap[viewPager.hashCode()] = callback
+                viewPager.addOnPageChangeListener(callback)
+            }
+            is ViewPager2 -> {
+                val callback = ViewPager2Callback(fragment.childFragmentManager, ::onPageChanged)
+                viewPagerCallbackMap[viewPager.hashCode()] = callback
+                viewPager.registerOnPageChangeCallback(callback)
+            }
         }
     }
 
@@ -155,9 +156,7 @@ abstract class ScrollHelper(
             stateResetter.save(
                 fragment,
                 toolbarMap[hash],
-                tabLayoutMap[hash],
-                fabMap[hash],
-                recyclerView
+                tabLayoutMap[hash]
             )
         }
     }
@@ -178,12 +177,17 @@ abstract class ScrollHelper(
             recyclerView.adapter = null
         }
 
-        if (viewPager != null) {
-            val listener = viewPagerCallbackMap.remove(viewPager.hashCode())
-            if (listener != null) {
+        when (viewPager) {
+            is ViewPager -> {
+                val listener = viewPagerCallbackMap.remove(viewPager.hashCode())
+                require(listener is ViewPagerCallback)
+                viewPager.removeOnPageChangeListener(listener)
+            }
+            is ViewPager2 -> {
+                val listener = viewPagerCallbackMap.remove(viewPager.hashCode())
+                require(listener is ViewPager2Callback)
                 viewPager.unregisterOnPageChangeCallback(listener)
             }
-            viewPager.adapter = null
         }
     }
 
@@ -222,7 +226,7 @@ abstract class ScrollHelper(
     abstract fun findRecyclerView(fragment: Fragment): RecyclerView?
     abstract fun findFab(fragment: Fragment): View?
 
-    abstract fun findViewPager(fragment: Fragment): ViewPager2?
+    abstract fun findViewPager(fragment: Fragment): View?
 
     protected open fun updateRecyclerViewPadding(
         fragment: Fragment,
@@ -245,14 +249,14 @@ abstract class ScrollHelper(
     }
 
     internal fun findFirstCap(tabLayout: View?, toolbar: View?): Int {
-        val tabLayoutHeight = tabLayout?.height ?: 0
-        val toolbarHeight = toolbar?.height ?: 0
+        val tabLayoutHeight = tabLayout?.height?.override(tabLayoutHeight) ?: 0
+        val toolbarHeight = toolbar?.height?.override(toolbarHeight) ?: 0
         return min(tabLayoutHeight, toolbarHeight)
     }
 
     internal fun findSecondCap(tabLayout: View?, toolbar: View?): Int {
-        val tabLayoutHeight = tabLayout?.height ?: 0
-        val toolbarHeight = toolbar?.height ?: 0
+        val tabLayoutHeight = tabLayout?.height?.override(tabLayoutHeight) ?: 0
+        val toolbarHeight = toolbar?.height?.override(toolbarHeight) ?: 0
         return tabLayoutHeight + toolbarHeight
     }
 
@@ -262,14 +266,21 @@ abstract class ScrollHelper(
             return 0
         }
         val bottomSheet = this.bottomSheet?.behavior?.peekHeight ?: 0
-        val bottomNavigation = this.bottomNavigation?.height ?: 0
+        val bottomNavigation = this.bottomNavigation?.height?.override(bottomNavigationHeight) ?: 0
         return min(bottomNavigation, bottomSheet)
     }
 
     internal fun findSecondBaseline(): Int {
         val bottomSheet = this.bottomSheet?.behavior?.peekHeight ?: 0
-        val bottomNavigation = this.bottomNavigation?.height ?: 0
+        val bottomNavigation = this.bottomNavigation?.height?.override(bottomNavigationHeight) ?: 0
         return max(bottomNavigation, bottomSheet)
+    }
+
+    private fun Int?.override(value: Int): Int {
+        if (this != null) {
+            return value
+        }
+        return 0
     }
 
 }

@@ -29,9 +29,7 @@ internal class FragmentLifecycleMonitor(
         if (f.view == null || callback.shouldSkipFragment(f)) {
             return
         }
-        f.requireView().doOnPreDraw {
-            callback.onFragmentViewCreated(f)
-        }
+        callback.onFragmentViewCreated(f)
     }
 
     override fun onFragmentStopped(fm: FragmentManager, f: Fragment) {

@@ -1,6 +1,8 @@
 package dev.olog.scrollhelper.example.listener
 
+import android.content.Context
 import android.view.View
+import androidx.annotation.DimenRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -8,13 +10,23 @@ import androidx.viewpager2.widget.ViewPager2
 import dev.olog.scrollhelper.ScrollHelper
 import dev.olog.scrollhelper.example.R
 import dev.olog.scrollhelper.example.findViewByIdNotRecursive
-import dev.olog.scrollhelper.example.second.item.SecondItemFragment
+
+private fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
 
 class SuperCerealScrollHelper(
     private val activity: FragmentActivity,
     fullScrollTop: Boolean,
     fullScrollBottom: Boolean
-) : ScrollHelper(activity,fullScrollTop, fullScrollBottom) {
+) : ScrollHelper(
+    activity = activity,
+    fullScrollTop = fullScrollTop,
+    fullScrollBottom = fullScrollBottom,
+    toolbarHeight = activity.dimen(R.dimen.toolbar),
+    tabLayoutHeight = activity.dimen(R.dimen.tab_layout),
+    bottomSheetHeight = activity.dimen(R.dimen.bottom_sheet), // just it's height, not counting the offset of bottom navigation
+    bottomNavigationHeight = activity.dimen(R.dimen.bottom_navigation),
+    restoreState = true // if true, you'll need to implement your recycler view scroll restore
+) {
 
     private val viewPagerRegex = "^f\\d+\$".toRegex()
 
@@ -33,14 +45,21 @@ class SuperCerealScrollHelper(
     }
 
     override fun findTabLayout(fragment: Fragment): View? {
-        return fragment.requireActivity().findViewById(R.id.tabLayout)
+        val view = if (isViewPagerFragment(fragment.tag ?: "")) {
+            fragment.requireParentFragment().requireView()
+        } else {
+            fragment.requireView()
+        }
+        return view.findViewByIdNotRecursive(R.id.tabLayout)
     }
 
     override fun findToolbar(fragment: Fragment): View? {
-        if (fragment.tag == SecondItemFragment.TAG) {
-            return null
+        val view = if (isViewPagerFragment(fragment.tag ?: "")) {
+            fragment.requireParentFragment().requireView()
+        } else {
+            fragment.requireView()
         }
-        return fragment.requireActivity().findViewById(R.id.toolbar)
+        return view.findViewByIdNotRecursive(R.id.toolbar)
     }
 
     private fun isViewPagerFragment(tag: String): Boolean {

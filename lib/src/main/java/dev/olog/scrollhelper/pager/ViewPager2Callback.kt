@@ -2,12 +2,12 @@ package dev.olog.scrollhelper.pager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 
-internal class ViewPagerCallback(
+internal class ViewPager2Callback(
     private val fragmentManager: FragmentManager,
     private val onPageChanged: (Fragment) -> Unit
-) : ViewPager.SimpleOnPageChangeListener() {
+) : ViewPager2.OnPageChangeCallback() {
 
     private var first = true
 

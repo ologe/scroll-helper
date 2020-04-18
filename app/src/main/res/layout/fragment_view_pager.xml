@@ -17,7 +17,7 @@
     <FrameLayout
             android:id="@+id/toolbar"
             android:layout_width="0dp"
-            android:layout_height="?actionBarSize"
+            android:layout_height="@dimen/toolbar"
             android:background="?colorSurface"
             android:elevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/tab_layout"
             android:background="?colorSurface"
             android:elevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"

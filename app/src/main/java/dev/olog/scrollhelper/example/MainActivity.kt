@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        scrollHelper = SuperCerealScrollHelper(this, false, false)
+        scrollHelper = SuperCerealScrollHelper(this, true, false)
 
         if (savedInstanceState == null) {
             toFirstItem()
