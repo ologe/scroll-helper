@@ -174,7 +174,7 @@ abstract class ScrollHelper(
             toolbarMap.remove(hash)
             tabLayoutMap.remove(hash)
 
-            recyclerView.adapter = null
+//            recyclerView.adapter = null
         }
 
         when (viewPager) {
