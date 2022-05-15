@@ -3,18 +3,14 @@ apply plugin: 'kotlin-android'
 
 android {
 
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    compileSdkVersion 31
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
-        // sdk-major-minor-alpha/beta/release-fix
-        // alpha 0
-        // beta 1
-        // release 2
-        versionCode 29_1_2_2_00
-        versionName "1.2.0"
+        targetSdkVersion 31
+        versionCode 29_1_2_1_00
+        versionName "1.2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -33,23 +29,23 @@ android {
     }
     // For Kotlin projects
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
 
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation "com.google.android.material:material:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation "com.google.android.material:material:1.6.0"
 
-    def lifecycle_version = "2.2.0"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

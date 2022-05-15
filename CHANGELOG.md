@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.2.1
+- Dependencies update
+
 ## 1.2.0
 - Dependencies update
 - replaced custom `MultiListenerBottomSheetBehavior` with built-in one
